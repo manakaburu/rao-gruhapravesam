@@ -19,12 +19,13 @@ function saveChoice(choice: Exclude<Choice, null>) {
  * Browsers only allow sound after a real tap/click/keypress on the page; a
  * scroll gesture never counts. Phones therefore always block the first
  * autoplay attempt. When that happens we show a short "Open invitation" cover
- * whose button *is* that tap, so the music starts reliably on iOS and Android.
+ * whose button (or any tap on it) *is* that tap, so the music starts reliably
+ * on iOS and Android. Guests can still pause with the ♪ button at any time.
  * Where autoplay is permitted the cover never appears.
  */
 export function InvitationMusic() {
   const ref = useRef<HTMLAudioElement>(null)
-  const api = useRef({ toggle: () => {}, open: (_music: boolean) => {} })
+  const api = useRef({ toggle: () => {}, open: () => {} })
   const openButton = useRef<HTMLButtonElement>(null)
   const [playing, setPlaying] = useState(false)
   const [expanded, setExpanded] = useState(false)
@@ -83,7 +84,7 @@ export function InvitationMusic() {
     }
 
     function startOnGesture(event: Event) {
-      // While the cover is up, its own buttons decide; afterwards respect "without music".
+      // While the cover is up it decides; afterwards respect a pause made with the ♪ button.
       if (!event.isTrusted || gateShown && choice === null) return
       if (event.target instanceof Element && event.target.closest('.music-button,.music-gate')) return
       if (event instanceof PointerEvent && event.type === 'pointerdown' && event.pointerType !== 'mouse') return
@@ -107,14 +108,12 @@ export function InvitationMusic() {
       setMessage('Music could not load. Tap ♪ to retry.')
     }
 
-    api.current.open = (music: boolean) => {
-      choice = music ? 'on' : 'off'
+    api.current.open = () => {
+      choice = 'on'
       saveChoice(choice)
-      userPaused = !music
-      if (music) {
-        try { (navigator as Navigator & { audioSession?: { type: string } }).audioSession!.type = 'playback' } catch { /* not supported */ }
-        void startPlayback(true)
-      }
+      userPaused = false
+      try { (navigator as Navigator & { audioSession?: { type: string } }).audioSession!.type = 'playback' } catch { /* not supported */ }
+      void startPlayback(true)
       setGate('closing')
     }
     api.current.toggle = () => {
@@ -167,9 +166,7 @@ export function InvitationMusic() {
     const root = document.documentElement
     root.classList.add('music-gate-open')
     openButton.current?.focus({ preventScroll: true })
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') api.current.open(false) }
-    document.addEventListener('keydown', onKey)
-    return () => { root.classList.remove('music-gate-open'); document.removeEventListener('keydown', onKey) }
+    return () => root.classList.remove('music-gate-open')
   }, [gate])
 
   const name = 'Achyutam Keshavam — Uploaded Recording'
@@ -193,18 +190,17 @@ export function InvitationMusic() {
       {!playing && message && gate === 'hidden' && <p role="status" className="music-error">{message}</p>}
     </div>
     {gate !== 'hidden' && <div className={'music-gate' + (gate === 'closing' ? ' is-closing' : '')}
-      role="dialog" aria-modal="true" aria-labelledby="music-gate-title" data-testid="music-gate">
+      role="dialog" aria-modal="true" aria-labelledby="music-gate-title" data-testid="music-gate"
+      // A tap anywhere on the cover opens the invitation; it is the gesture phones need for sound.
+      onClick={() => { if (gate === 'open') api.current.open() }}>
       <div className="music-gate__card">
         <img src={import.meta.env.BASE_URL + 'rosette.svg'} alt="" width="44" height="44" />
         <p className="music-gate__family">{invitation.familyDisplay}</p>
         <p className="music-gate__title" id="music-gate-title">{invitation.ceremony} <em>{invitation.festival}</em></p>
         <p className="music-gate__meta"><span>{invitation.dateRange}</span><span>{invitation.shortLocation}</span></p>
         <FloralRule />
-        <button type="button" ref={openButton} className="music-gate__open" onClick={() => api.current.open(true)}>
+        <button type="button" ref={openButton} className="music-gate__open">
           <span aria-hidden="true">♪</span> Open invitation
-        </button>
-        <button type="button" className="music-gate__quiet" onClick={() => api.current.open(false)}>
-          Continue without music
         </button>
       </div>
     </div>}

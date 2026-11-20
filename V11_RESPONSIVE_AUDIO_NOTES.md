@@ -22,3 +22,13 @@ event facts, the six-scene order and the watercolor reveal itself are unchanged.
 
 ## Not verified
 Real iPhone Safari / Android Chrome hardware. iOS ignores `audio.volume`, so the fade-in is skipped there (music starts at device volume).
+
+## V11.1 refinements (2026-11-20)
+| Area | Change |
+|---|---|
+| Music cover | "Continue without music" removed. The cover has one action, **Open invitation**; a tap anywhere on it also opens the page with music. Guests can still pause with ♪. |
+| Title card blending | The rectangular slip and hairline frame are gone. The name sits in an edgeless paper-coloured watercolor bloom (`watercolor-mask.png`) that spreads as it appears, over a soft opaque core; a paper glow on the letterforms melts them into it. Bloom silhouette is mirrored/rotated per chapter. |
+| Text timing | One staggered sequence per wash (`src/data/watercolor.ts`): outgoing body then heading leave (0–.16) → name blooms in (.18–.34), number and rule a beat later → card holds .34–.58 (≈28% of the wash, was 15%) → dissolves by .72 → heading .72–.88 → body .80–.97. No dead gaps and never two texts at once (`scripts/check-watercolor.mjs`). |
+| Opening timing | The threshold held for only 4.5% (~240px) before the first wash. Every chapter, including the first, now holds 7% (~370px at 1440×900); washes are 11.4% each. Total runway unchanged (6.4 × stage height). |
+
+Regression run: `npm run build` passes; fit probe clean at 375×667, 768×1024, 844×390, 1366×768, 1920×1080; forward + reverse holds settle correctly; 63 mid-wash samples with zero text overlaps; music cover tap / button / pause / resume pass with a simulated autoplay block.

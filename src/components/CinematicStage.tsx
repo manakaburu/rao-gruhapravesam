@@ -3,7 +3,7 @@ import type { MouseEvent } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { chapters, RUNWAY } from '../data/chapters'
-import { watercolorAt } from '../data/watercolor'
+import { watercolorAt, CARD_WINDOW } from '../data/watercolor'
 import { invitation } from '../data/invitation'
 import { ChapterSpread } from './ChapterSpread'
 import { WatercolorTransition } from './WatercolorTransition'
@@ -172,8 +172,9 @@ export function CinematicStage() {
         field.style.setProperty('--watercolor-aperture-size', (1 + 3.45 * diagonal * wash.aperture).toFixed(1) + 'px')
         field.style.setProperty('--pigment', wash.pigment.toFixed(4))
         veil.style.setProperty('--glimpse-opacity', wash.cue.toFixed(4))
-        // -1 -> 1 across the title window: the caption rises gently through it.
-        veil.style.setProperty('--glimpse-drift', (clamp((blend - .35) / .40) * 2 - 1).toFixed(4))
+        veil.style.setProperty('--glimpse-detail', wash.cueDetail.toFixed(4))
+        // -1 -> 1 across the card window: the caption rises gently through it.
+        veil.style.setProperty('--glimpse-drift', (clamp((blend - CARD_WINDOW.start) / (CARD_WINDOW.end - CARD_WINDOW.start)) * 2 - 1).toFixed(4))
       } else {
         delete field.dataset.incoming
       }

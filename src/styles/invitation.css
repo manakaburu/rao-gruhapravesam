@@ -729,51 +729,51 @@ address>* { display:block }
   -webkit-mask-image:url('/assets/watercolor-seam-final.png');
   mask-image:url('/assets/watercolor-seam-final.png');
 }
-/* Mid-wash chapter card: a deckle-edged parchment slip carrying the chapter
-   number, its name (last word in madder italic, like every chapter heading)
-   and the printed floral rule. Only opacity/transform animate. */
+/* Mid-wash chapter card. No card edges: the name sits in a paper-coloured
+   watercolor bloom (the same organic mask family as the reveal) that spreads
+   as the title arrives, with a soft opaque core for legibility. The number and
+   floral rule follow a beat later; the rule opens out as if drawn.
+   Only opacity/transform animate; nothing is blurred at runtime. */
 .chapter-portal__caption {
   --drift:var(--glimpse-drift,0);
+  --cue:var(--glimpse-opacity,0);
+  --detail:var(--glimpse-detail,0);
   position:relative;
   display:grid;
   justify-items:center;
   gap:clamp(.35rem,1vh,.6rem);
   width:max-content;
   max-width:min(88vw,36rem);
-  padding:clamp(1.5rem,4vh,2.4rem) clamp(2.4rem,6vw,4.4rem) clamp(1.1rem,3vh,1.7rem);
+  padding:clamp(1.4rem,3.6vh,2.2rem) clamp(2.4rem,6vw,4.4rem) clamp(1.1rem,3vh,1.6rem);
   text-align:center;
-  opacity:var(--glimpse-opacity,0);
-  transform:translate3d(0,calc(var(--drift) * -10px),0);
+  transform:translate3d(0,calc(var(--drift) * -9px),0);
 }
 .chapter-portal__caption::before {
-  /* Soft paper halo so the slip lifts off busy painting without a drop shadow. */
+  /* Outer bloom: feathered pigment edge that grows like wet paint spreading. */
   content:'';
   position:absolute;
-  inset:-38% -16%;
+  inset:-62% -30%;
   z-index:-2;
-  background:radial-gradient(closest-side,rgb(245 236 221 / .78) 35%,rgb(245 236 221 / 0) 100%);
   pointer-events:none;
+  background:radial-gradient(closest-side,rgb(248 241 228 / .94) 34%,rgb(245 236 221 / .78) 60%,rgb(217 185 149 / .26) 84%,rgb(217 185 149 / 0) 100%);
+  -webkit-mask:url('/assets/watercolor-mask.png') center / 100% 100% no-repeat;
+  mask:url('/assets/watercolor-mask.png') center / 100% 100% no-repeat;
+  opacity:var(--cue);
+  transform:scale(calc(.74 + .26 * var(--cue))) var(--bloom-turn,);
 }
 .chapter-portal__slip {
+  /* Inner core: an edgeless pool of paper so letters never sit on busy art. */
   position:absolute;
-  inset:0;
+  inset:-12% -8%;
   z-index:-1;
-  background:
-    radial-gradient(ellipse at 50% 45%,#fbf4e6 0%,#f8efdf 55%,#f2e6d1 100%),
-    var(--paper);
-  box-shadow:inset 0 0 0 1px #b9955833;
-  -webkit-mask:url('/assets/paper-edge.png') center / 100% 100% no-repeat;
-  mask:url('/assets/paper-edge.png') center / 100% 100% no-repeat;
-  transform:scale(calc(.94 + .06 * var(--glimpse-opacity,0)));
+  background:radial-gradient(closest-side,rgb(252 247 238 / .97) 48%,rgb(250 244 233 / .8) 72%,rgb(250 244 233 / 0) 100%);
+  opacity:var(--cue);
+  transform:scale(calc(.88 + .12 * var(--cue)));
 }
-.chapter-portal__slip::after {
-  /* Hairline brass frame just inside the torn edge, like a printed card. */
-  content:'';
-  position:absolute;
-  inset:clamp(.55rem,1.2vw,.8rem);
-  border:1px solid #b9955866;
-  border-radius:2px;
-}
+/* Vary the bloom's silhouette per chapter so no two washes look stamped. */
+.spreads[data-incoming="blessings"] .chapter-portal__caption { --bloom-turn:scaleX(-1); }
+.spreads[data-incoming="ceremonies"] .chapter-portal__caption { --bloom-turn:rotate(180deg); }
+.spreads[data-incoming="feast"] .chapter-portal__caption { --bloom-turn:scaleY(-1); }
 .chapter-portal__count {
   display:flex;
   align-items:center;
@@ -781,6 +781,8 @@ address>* { display:block }
   font:500 .68rem/1 var(--utility);
   letter-spacing:.22em;
   color:#8e7044;
+  opacity:var(--detail);
+  transform:translate3d(0,calc((1 - var(--detail)) * 5px),0);
 }
 .chapter-portal__count::before,
 .chapter-portal__count::after { content:''; width:1.6rem; height:1px; background:currentColor; opacity:.55 }
@@ -791,12 +793,21 @@ address>* { display:block }
   color:var(--ink);
   text-wrap:balance;
   white-space:nowrap;
+  /* A paper-coloured glow melts the letterforms into the bloom. */
+  text-shadow:0 0 .35em rgb(252 247 238 / .95),0 0 1em rgb(250 244 233 / .7);
+  opacity:var(--cue);
+  transform:translate3d(0,calc((1 - var(--cue)) * 6px),0);
 }
 .chapter-portal__title em { color:var(--madder); font-style:italic; }
-.watercolor-veil .chapter-portal__caption .floral-rule { margin:.1rem 0 0; color:#a3824b; justify-content:center; }
+.watercolor-veil .chapter-portal__caption .floral-rule {
+  margin:.1rem 0 0; color:#a3824b; justify-content:center;
+  opacity:var(--detail);
+  transform:scaleX(calc(.55 + .45 * var(--detail)));
+}
 .watercolor-veil .chapter-portal__caption .floral-rule svg { width:2.5rem; height:1.15rem; }
 @media(max-width:860px) {
-  .chapter-portal__caption { padding:1.35rem 2rem 1rem; gap:.35rem; }
+  .chapter-portal__caption { padding:1.25rem 2rem .95rem; gap:.35rem; }
+  .chapter-portal__caption::before { inset:-55% -22%; }
   .chapter-portal__title { font-size:clamp(1.7rem,8vw,2.3rem); white-space:normal; }
   .chapter-portal__count { font-size:.62rem; }
 }
@@ -941,10 +952,7 @@ address>* { display:block }
 .music-gate__open span { font-size:1.15rem; line-height:1; }
 .music-gate__open:hover { background:#7f352e; }
 .music-gate__open:active { transform:scale(.98); }
-.music-gate__quiet {
-  min-height:44px; padding:.5rem 1rem; margin-top:.25rem; border:0; background:none; cursor:pointer;
-  font:500 .78rem/1.3 var(--utility); color:var(--muted); text-decoration:underline; text-underline-offset:.25em;
-}
+.music-gate { cursor:pointer; }
 .music-gate :is(button):focus-visible { outline:2px solid var(--madder); outline-offset:3px; }
 @keyframes rao-gate-in { from { opacity:0 } to { opacity:1 } }
 @keyframes rao-gate-out { from { opacity:1 } to { opacity:0; visibility:hidden } }

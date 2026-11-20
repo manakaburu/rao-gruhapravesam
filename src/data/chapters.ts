@@ -4,16 +4,16 @@ import { invitation } from './invitation'
 export type ChapterId = 'entrance' | 'welcome' | 'blessings' | 'ceremonies' | 'feast' | 'closing'
 type VerseKey = keyof typeof invitation.verse
 
-// V11: the runway is ~6.4 stage-heights long (see CinematicStage), so every
-// chapter costs roughly one screen of scrolling on any device. Each of the five
-// reversible watercolor reveals spans 11.5% of the runway and every chapter
-// then holds still for 7.5% so its text can be read before the next wash.
+// V11.1: the runway is ~6.4 stage-heights long (see CinematicStage), so every
+// chapter costs roughly one screen of scrolling on any device. Every chapter —
+// including the opening threshold — holds still for 7% so it can be read, and
+// each of the five reversible watercolor reveals spans 11.4% of the runway.
 export const STORY_BEATS: Record<ChapterId, [number, number]> = {
-  entrance: [0, .045],
-  welcome: [.16, .235],
-  blessings: [.35, .425],
-  ceremonies: [.54, .615],
-  feast: [.73, .805],
+  entrance: [0, .07],
+  welcome: [.184, .254],
+  blessings: [.368, .438],
+  ceremonies: [.552, .622],
+  feast: [.736, .806],
   closing: [.92, 1],
 }
 /** Scroll runway length as a multiple of the visible stage height, with limits. */
