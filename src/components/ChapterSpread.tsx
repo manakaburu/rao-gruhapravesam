@@ -54,7 +54,7 @@ export function ChapterSpread({ chapter, ready }: { chapter: Chapter; ready: boo
       {id === 'closing' && <p className="source-line">Your presence and blessings will make our new home complete.</p>}
       {id === 'ceremonies' && art}
     </div>
-    {id === 'ceremonies' ? <div className="schedule-inset"><CeremonyList /><p className="zone">All times in Hyderabad</p></div> :
+    {id === 'ceremonies' ? <div className="schedule-inset"><CeremonyList /></div> :
       id === 'feast' ? <div className="meal-inset"><div className="feast-reveal">{art}<div className="meal-flourish" aria-hidden="true"><span /><span /><span /><span /><span /></div></div>
         <p>{lunch.description}</p><EventTime event={lunch} /></div> :
       id === 'closing' ? <div className="closing-inset"><div className="address-print">{art}<VenueAddress /></div>

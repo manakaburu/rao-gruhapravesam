@@ -7,7 +7,7 @@ const calendarLabels = [invite.events[0].title, 'Vratham', 'Lunch']
 const share = [
   invite.title, invite.familyDisplay, invite.hosts.join(' & '), '',
   ...invite.events.map(event => event.title + ' · ' + event.display),
-  'All times in Hyderabad (' + invite.timezone + ')', '', address, invite.venue.landmark,
+  '', address, invite.venue.landmark,
   'Contact ' + invite.contactPhone,
   ...(import.meta.env.VITE_SITE_URL ? [import.meta.env.VITE_SITE_URL] : []),
 ].join('\n')

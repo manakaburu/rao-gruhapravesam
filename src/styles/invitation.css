@@ -23,7 +23,7 @@ a:focus-visible,summary:focus-visible,[tabindex]:focus-visible { outline:2px sol
 .shortcuts,.details-link,.scroll-cue,.scene-progress { display:flex; align-items:center }
 .shortcuts { gap:clamp(.75rem,2.2vw,2rem) }
 .shortcuts details { position:relative }
-.shortcuts summary,.details-link,.scroll-cue,.scene-progress,.section-label,.calendars>span,.zone {
+.shortcuts summary,.details-link,.scroll-cue,.scene-progress,.section-label,.calendars>span {
   font:500 .72rem/1.4 var(--utility); letter-spacing:.105em; text-transform:uppercase
 }
 .shortcuts summary,.details-link { cursor:pointer; min-height:44px; display:flex; align-items:center; gap:.45rem; text-decoration:none; color:var(--madder) }
@@ -59,7 +59,7 @@ a:focus-visible,summary:focus-visible,[tabindex]:focus-visible { outline:2px sol
 .verse { font:400 clamp(1rem,1.43vw,1.48rem)/1.85 var(--telugu); color:#693e36 }
 .imprint { margin-top:clamp(1.35rem,3.5vh,2.4rem); display:grid; gap:.4rem }
 .imprint span:first-child { font:600 clamp(1.15rem,1.55vw,1.55rem)/1.2 var(--display) }
-.imprint span+span,.zone { color:var(--muted); font-size:.8rem }
+.imprint span+span { color:var(--muted); font-size:.8rem }
 .source-line { margin-top:1.25rem; max-width:28rem; font:500 clamp(1.2rem,1.65vw,1.6rem)/1.28 var(--display) }
 
 .plate { grid-area:art; justify-self:center; align-self:center; position:relative; width:min(100%,101dvh); aspect-ratio:4/3 }
@@ -110,7 +110,7 @@ address>* { display:block }
 .action-row a,.calendars a,.family-phone { display:inline-flex; align-items:center; justify-content:center; min-height:44px; gap:.2rem; color:var(--madder) }
 .action-row .arrow { width:.85rem }
 .calendars { border-top:1px solid var(--rule); margin-top:.2rem; padding-top:.55rem }
-.calendars>span,.zone { font-size:.67rem; }
+.calendars>span { font-size:.67rem; }
 .calendars a { font-size:.84rem; color:var(--ink) }
 .event-details { background:#f9f3e8 var(--grain); border-top:1px solid var(--rule); padding:clamp(2.5rem,6vw,5.5rem) var(--gutter); scroll-margin-top:var(--header) }
 .details-inner { max-width:68rem; margin:auto }
