@@ -7,7 +7,7 @@ export function EventDetails() {
     <div className="details-inner"><h2 id="details-title">Event <em>details</em></h2>
       <p className="blessings">With the blessings of {invite.blessings}, {invite.hosts.join(' & ')} invite you to their Gruhapravesam.</p>
       <div className="details-columns"><div><p className="section-label">Ceremonies</p>
-        <p className="time-zone">All times in Hyderabad · {invite.timezone}</p><CeremonyList summary /></div>
+        <CeremonyList summary /></div>
         <div className="venue"><h3 className="section-label">Venue &amp; directions</h3><VenueAddress />
           <InvitationActions /></div>
       </div>
