@@ -30,14 +30,19 @@ for (let i=0;i<beats.length;i++) {
   }
 }
 assert(stage.includes('stageHeight * RUNWAY.perStage') && stage.includes("probe.style.height = '100svh'"), 'Runway must follow the stable small-viewport stage height')
-assert(stage.includes('scrub: .55'), 'Responsive scroll scrub latency changed')
+assert(stage.includes('scrub: .8'), 'Responsive scroll scrub latency changed')
 assert(stage.includes('watercolorAt(blend)'), 'Watercolor must sample the shared scroll playhead')
 assert(stage.includes("field.style.setProperty('--watercolor-aperture-size'"), 'Full-field watercolor opening missing')
 assert(!stage.includes('incoming.style.clipPath'), 'Do not reintroduce a hard polygon portal')
 assert(stage.includes('trigger: track') && !stage.includes('pin: true'), 'Sticky story must not use dynamic GSAP pinning')
-assert(transition.includes('watercolor-chapter-reveal') && transition.includes('chapter-portal__title'), 'Centered title overlay missing')
+assert(transition.includes('watercolor-chapter-reveal') && !transition.includes('chapter-portal'), 'V12: the incoming chapter itself is the reveal; no separate title card')
 assert(!transition.includes('chapter-portal__rim'), 'No scorched paper edge should be present')
 assert(css.includes("-webkit-mask-image:url('/assets/watercolor-mask-clarity.png')"), 'Higher-contrast full-stage watercolor mask missing')
 assert(css.includes('scale:1 !important'), 'Master paintings must remain fixed')
 assert(css.includes('@media(prefers-reduced-motion:reduce)'), 'Reduced motion support missing')
-console.log('6 scenes, 5 readable reversible watercolor reveals, centered chapter titles, fixed art PASS')
+// V12: sequential, guided storytelling for every guest.
+assert(stage.includes('function step(') && stage.includes("addEventListener('wheel', onWheel, { passive: false })") && stage.includes("addEventListener('touchmove', onTouchMove, { passive: false })"), 'One-chapter-per-gesture stepping missing')
+assert(stage.includes('performance.now() - lastInput.current > 220'), 'Momentum must be absorbed so a flick cannot skip chapters')
+assert(stage.includes('y >= detailsY - 2'), 'Event details must keep native scrolling')
+assert(stage.includes('scroll-hint') && stage.includes('Swipe up to begin') && stage.includes('next-chapter'), 'Scroll hint and Next button missing')
+console.log('6 scenes, 5 reversible watercolor reveals, one chapter per gesture, guided hint + Next, fixed art PASS')

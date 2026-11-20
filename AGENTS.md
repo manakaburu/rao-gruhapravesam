@@ -1,3 +1,5 @@
+> **V12 UPDATE (2026-11-20):** At the owner's request the story is now guided and sequential (one chapter per wheel notch / swipe / key, scroll hint, Next button) and the mid-wash title card is removed. This overrides the "no wheel/touch hijack, forced snapping" rule below. See the V12 section of `V11_RESPONSIVE_AUDIO_NOTES.md`.
+
 > **V11 UPDATE (2026-11-19):** `V11_RESPONSIVE_AUDIO_NOTES.md` supersedes `FINAL_LOCK_V10.md` for the scroll runway (now viewport-relative), the mid-wash chapter title card, the venue card layout, tablet/landscape layouts and the mobile music cover. Read it before changing those areas.
 
 > **FINAL V10 LOCK (2026-11-19):** `FINAL_LOCK_V10.md` overrides historical release/pacing notes only for the last two watercolor reveals and the 5800px/4200px scroll runway. All artwork, Telugu copy, factual event data, audio, V9 main-scene motion and five-transition structure remain locked. Read that file before previous implementation notes.

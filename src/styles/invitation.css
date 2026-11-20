@@ -729,88 +729,6 @@ address>* { display:block }
   -webkit-mask-image:url('/assets/watercolor-seam-final.png');
   mask-image:url('/assets/watercolor-seam-final.png');
 }
-/* Mid-wash chapter card. No card edges: the name sits in a paper-coloured
-   watercolor bloom (the same organic mask family as the reveal) that spreads
-   as the title arrives, with a soft opaque core for legibility. The number and
-   floral rule follow a beat later; the rule opens out as if drawn.
-   Only opacity/transform animate; nothing is blurred at runtime. */
-.chapter-portal__caption {
-  --drift:var(--glimpse-drift,0);
-  --cue:var(--glimpse-opacity,0);
-  --detail:var(--glimpse-detail,0);
-  position:relative;
-  display:grid;
-  justify-items:center;
-  gap:clamp(.35rem,1vh,.6rem);
-  width:max-content;
-  max-width:min(88vw,36rem);
-  padding:clamp(1.4rem,3.6vh,2.2rem) clamp(2.4rem,6vw,4.4rem) clamp(1.1rem,3vh,1.6rem);
-  text-align:center;
-  transform:translate3d(0,calc(var(--drift) * -9px),0);
-}
-.chapter-portal__caption::before {
-  /* Outer bloom: feathered pigment edge that grows like wet paint spreading. */
-  content:'';
-  position:absolute;
-  inset:-62% -30%;
-  z-index:-2;
-  pointer-events:none;
-  background:radial-gradient(closest-side,rgb(248 241 228 / .94) 34%,rgb(245 236 221 / .78) 60%,rgb(217 185 149 / .26) 84%,rgb(217 185 149 / 0) 100%);
-  -webkit-mask:url('/assets/watercolor-mask.png') center / 100% 100% no-repeat;
-  mask:url('/assets/watercolor-mask.png') center / 100% 100% no-repeat;
-  opacity:var(--cue);
-  transform:scale(calc(.74 + .26 * var(--cue))) var(--bloom-turn,);
-}
-.chapter-portal__slip {
-  /* Inner core: an edgeless pool of paper so letters never sit on busy art. */
-  position:absolute;
-  inset:-12% -8%;
-  z-index:-1;
-  background:radial-gradient(closest-side,rgb(252 247 238 / .97) 48%,rgb(250 244 233 / .8) 72%,rgb(250 244 233 / 0) 100%);
-  opacity:var(--cue);
-  transform:scale(calc(.88 + .12 * var(--cue)));
-}
-/* Vary the bloom's silhouette per chapter so no two washes look stamped. */
-.spreads[data-incoming="blessings"] .chapter-portal__caption { --bloom-turn:scaleX(-1); }
-.spreads[data-incoming="ceremonies"] .chapter-portal__caption { --bloom-turn:rotate(180deg); }
-.spreads[data-incoming="feast"] .chapter-portal__caption { --bloom-turn:scaleY(-1); }
-.chapter-portal__count {
-  display:flex;
-  align-items:center;
-  gap:.7rem;
-  font:500 .68rem/1 var(--utility);
-  letter-spacing:.22em;
-  color:#8e7044;
-  opacity:var(--detail);
-  transform:translate3d(0,calc((1 - var(--detail)) * 5px),0);
-}
-.chapter-portal__count::before,
-.chapter-portal__count::after { content:''; width:1.6rem; height:1px; background:currentColor; opacity:.55 }
-.chapter-portal__title {
-  display:block;
-  font:500 clamp(2rem,3.6vw,3.4rem)/1 var(--display);
-  letter-spacing:-.03em;
-  color:var(--ink);
-  text-wrap:balance;
-  white-space:nowrap;
-  /* A paper-coloured glow melts the letterforms into the bloom. */
-  text-shadow:0 0 .35em rgb(252 247 238 / .95),0 0 1em rgb(250 244 233 / .7);
-  opacity:var(--cue);
-  transform:translate3d(0,calc((1 - var(--cue)) * 6px),0);
-}
-.chapter-portal__title em { color:var(--madder); font-style:italic; }
-.watercolor-veil .chapter-portal__caption .floral-rule {
-  margin:.1rem 0 0; color:#a3824b; justify-content:center;
-  opacity:var(--detail);
-  transform:scaleX(calc(.55 + .45 * var(--detail)));
-}
-.watercolor-veil .chapter-portal__caption .floral-rule svg { width:2.5rem; height:1.15rem; }
-@media(max-width:860px) {
-  .chapter-portal__caption { padding:1.25rem 2rem .95rem; gap:.35rem; }
-  .chapter-portal__caption::before { inset:-55% -22%; }
-  .chapter-portal__title { font-size:clamp(1.7rem,8vw,2.3rem); white-space:normal; }
-  .chapter-portal__count { font-size:.62rem; }
-}
 /* Fade text at its own boundary. The ceremony, meal and venue illustrations
    are nested inside information groups and must stay opaque under the mask. */
 .is-cinematic .spread:is(.revealing,.departing) .heading-block { opacity:var(--title-opacity); }
@@ -963,3 +881,53 @@ address>* { display:block }
   .music-gate .floral-rule { margin:.2rem 0 .35rem; }
 }
 @media (prefers-reduced-motion:reduce) { .music-gate, .music-gate.is-closing { animation-duration:.01ms; } }
+
+/* ===== V12 GUIDED, SEQUENTIAL STORY (2026-11-20) =====
+   1. Inside the story every wheel notch, swipe or paging key moves exactly one
+      chapter (CinematicStage `step`); momentum cannot skip chapters.
+   2. A clear "Swipe up / Scroll down to begin" hint on the opening screen.
+   3. A real, tappable Next button in the footer that glides chapter by chapter
+      and pulses gently if a guest lingers. */
+.scroll-hint {
+  position:absolute; z-index:5; left:50%; bottom:clamp(.55rem,2.2svh,1.4rem);
+  display:inline-flex; align-items:center; gap:.65rem; min-height:48px;
+  padding:.65rem 1.35rem .65rem 1.05rem; border:1px solid #9140376b; border-radius:99px;
+  background:rgb(255 249 238 / .95); color:var(--madder); cursor:pointer;
+  font:500 clamp(.95rem,1.2vw,1.05rem)/1.2 var(--utility); letter-spacing:.02em; white-space:nowrap;
+  box-shadow:0 8px 24px #4d33221f;
+  transform:translateX(-50%);
+  animation:rao-hint-in .8s ease-out .5s both;
+}
+.scroll-hint:hover { background:#fff3e2; }
+.scroll-hint:focus-visible,.next-chapter:focus-visible { outline:2px solid var(--madder); outline-offset:3px; }
+.scroll-hint__icon { display:grid; justify-items:center; animation:rao-hint-bob 1.8s ease-in-out infinite; }
+.scroll-hint__icon .arrow { width:1.15rem; height:1.15rem; }
+.scroll-hint__icon .arrow+.arrow { margin-top:-.7rem; opacity:.5; }
+/* On touch the arrows follow the finger: up, matching "Swipe up". */
+.scroll-hint--touch .scroll-hint__icon .arrow { rotate:180deg; }
+.scroll-hint--touch .scroll-hint__icon { flex-direction:column-reverse; }
+.stage:not(.is-cinematic) .scroll-hint { display:none; }
+@keyframes rao-hint-in { from { opacity:0; translate:0 8px } to { opacity:1; translate:0 0 } }
+@keyframes rao-hint-bob { 0%,100% { transform:translateY(-3px) } 50% { transform:translateY(4px) } }
+
+.next-chapter {
+  display:inline-flex; align-items:center; gap:.4rem; flex-shrink:0; min-height:38px;
+  padding:.4rem .95rem .4rem 1.05rem; border:1px solid #91403780; border-radius:99px;
+  background:#fff8ec; color:var(--madder); cursor:pointer;
+  font:600 .74rem/1 var(--utility); letter-spacing:.12em; text-transform:uppercase;
+  transition:background .2s,color .2s;
+}
+.next-chapter .arrow { width:1rem; height:1rem; }
+.next-chapter:hover { background:var(--madder); color:#fff8ec; }
+.next-chapter.is-nudging { animation:rao-nudge 2.4s ease-in-out infinite; }
+@keyframes rao-nudge {
+  0%,100% { box-shadow:0 0 0 0 #91403700; transform:translateY(0) }
+  50% { box-shadow:0 0 0 7px #91403729; transform:translateY(2px) }
+}
+@media(max-width:420px) {
+  .next-chapter { padding:.4rem .75rem .4rem .85rem; letter-spacing:.08em; }
+  .scroll-hint { font-size:.95rem; padding-inline:.9rem 1.1rem; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .scroll-hint,.scroll-hint__icon,.next-chapter.is-nudging { animation:none; }
+}

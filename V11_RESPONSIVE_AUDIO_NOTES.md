@@ -32,3 +32,14 @@ Real iPhone Safari / Android Chrome hardware. iOS ignores `audio.volume`, so the
 | Opening timing | The threshold held for only 4.5% (~240px) before the first wash. Every chapter, including the first, now holds 7% (~370px at 1440×900); washes are 11.4% each. Total runway unchanged (6.4 × stage height). |
 
 Regression run: `npm run build` passes; fit probe clean at 375×667, 768×1024, 844×390, 1366×768, 1920×1080; forward + reverse holds settle correctly; 63 mid-wash samples with zero text overlaps; music cover tap / button / pause / resume pass with a simulated autoplay block.
+
+## V12 — guided, sequential story (2026-11-20)
+Supersedes the V11.1 title card and the "no scroll hijack / no snapping" rule in `AGENTS.md`, at the owner's request (elder guests).
+| Area | Change |
+|---|---|
+| Mid-wash title card | Removed. The incoming chapter itself is the reveal: its heading surfaces at .22–.50 of the wash and its body at .34–.66, inside the spreading watercolor, after the outgoing copy has cleared (0–.16). |
+| One chapter at a time | Inside the story every wheel notch, swipe or ↓/PageDown/Space (↑/PageUp/Shift+Space back) glides exactly one chapter (1.5 s, `step()` in `CinematicStage.tsx`). Input is locked until trackpad / phone momentum dies down, so a hard flick cannot skip ahead. A scrollbar drag released mid-wash eases to the nearest chapter. Event details below the story scroll natively. Landscape phones, `?reading=1` and reduced motion keep plain scrolling. CSS scroll-snap was tried first and rejected: browsers snap gentle 1–3 notch wheel scrolls back to the same chapter. |
+| Guidance | "Scroll down to begin" (desktop) / "Swipe up to begin" (touch, arrows pointing up) on the opening screen, tappable. A real **Next** button in the footer (**Event details** on the last chapter); it pulses gently after 6 s without scrolling. |
+| Music cover | Unchanged; scrolling is inert while it is showing. |
+
+Regression run: `npm run build` passes; wheel 1 / 3 / 25-notch bursts and reverse each move one chapter; simulated swipes and triple flicks move one chapter; keyboard keys step; closing ↔ Event details boundary and native scrolling inside details verified; fit probe clean at 375×667, 768×1024, 844×390, 1366×768; hint never overlaps chapter content; music cover + stepping verified with a simulated autoplay block.

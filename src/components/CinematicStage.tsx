@@ -2,15 +2,20 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { MouseEvent } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 import { chapters, RUNWAY } from '../data/chapters'
-import { watercolorAt, CARD_WINDOW } from '../data/watercolor'
+import { watercolorAt } from '../data/watercolor'
 import { invitation } from '../data/invitation'
 import { ChapterSpread } from './ChapterSpread'
 import { WatercolorTransition } from './WatercolorTransition'
 import { Arrow } from './Ornaments'
 import { InvitationMusic } from './InvitationMusic'
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
+
+/** Resting point of each chapter on the runway (0-1): where each step lands. */
+const restAt = (i: number) => i === 0 ? 0 : (chapters[i].start + chapters[i].end) / 2
+const GLIDE_SECONDS = 1.5
 
 export function CinematicStage() {
   const stage = useRef<HTMLDivElement>(null)
@@ -20,7 +25,64 @@ export function CinematicStage() {
   const controller = useRef<ScrollTrigger | null>(null)
   const [active, setActive] = useState(0)
   const [loaded, setLoaded] = useState(() => new Set([0]))
+  const [started, setStarted] = useState(false)
+  const [nudge, setNudge] = useState(false)
+  const glide = useRef<gsap.core.Tween | null>(null)
   const reading = new URLSearchParams(location.search).has('reading')
+  const touch = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches
+
+  const busy = useRef(false)
+  const lastInput = useRef(0)
+
+  /** Scroll positions of every chapter's resting point and of Event details. */
+  function positions() {
+    const pin = controller.current!
+    const stops = chapters.map((_, i) => Math.round(pin.start + (pin.end - pin.start) * restAt(i)))
+    const details = document.getElementById('event-details')!
+    const detailsY = Math.round(details.getBoundingClientRect().top + window.scrollY - mast.current!.offsetHeight)
+    return { stops, detailsY }
+  }
+
+  /** Unhurried glide so each watercolor reveal plays out fully. */
+  function glideTo(y: number) {
+    busy.current = true
+    glide.current?.kill()
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+    // Stay locked until trackpad / phone momentum has died down, so one flick = one chapter.
+    const release = () => {
+      glide.current = null
+      const wait = () => { if (performance.now() - lastInput.current > 220) busy.current = false; else window.setTimeout(wait, 80) }
+      wait()
+    }
+    glide.current = gsap.to(window, {
+      duration: reduced ? 0 : GLIDE_SECONDS, ease: 'sine.inOut',
+      scrollTo: { y, autoKill: false }, onComplete: release, onInterrupt: release,
+    })
+  }
+
+  /** Is a step in this direction ours to take (inside the story), or native scrolling? */
+  function storyOwns(dir: 1 | -1) {
+    if (!controller.current || document.documentElement.classList.contains('music-gate-open')) return false
+    const { stops, detailsY } = positions()
+    const y = window.scrollY
+    return dir > 0 ? y < detailsY - 2 : y > stops[0] + 2 && y <= detailsY + 2
+  }
+
+  /** Move exactly one chapter (or into / out of Event details). */
+  function step(dir: 1 | -1) {
+    if (!storyOwns(dir)) return false
+    const { stops, detailsY } = positions()
+    const y = window.scrollY
+    const target = dir > 0 ? stops.find(s => s > y + 2) ?? detailsY : [...stops].reverse().find(s => s < y - 2)
+    if (target === undefined) return false
+    glideTo(target)
+    return true
+  }
+
+  function next() {
+    if (busy.current) return
+    if (!step(1)) navigate('#event-details', true)
+  }
 
   function navigate(hash: string, updateHistory = false) {
     const target = document.getElementById(hash.slice(1))
@@ -73,16 +135,6 @@ export function CinematicStage() {
     const field = el.querySelector<HTMLElement>('.spreads')!
     const veil = el.querySelector<HTMLDivElement>('.watercolor-veil')!
     const meter = el.querySelector<HTMLElement>('.progress-fill')!
-    const portalTitle = veil.querySelector<HTMLElement>('.chapter-portal__title')!
-    const portalCount = veil.querySelector<HTMLElement>('.chapter-portal__count')!
-    // "Welcome Home" -> "Welcome <em>Home</em>", echoing each chapter's own heading.
-    const setPortalTitle = (index: number) => {
-      const words = chapters[index].name.split(' ')
-      const em = document.createElement('em')
-      em.textContent = words.pop()!
-      portalTitle.replaceChildren(words.length ? words.join(' ') + ' ' : '', em)
-      portalCount.textContent = `${String(index + 1).padStart(2, '0')} / ${String(chapters.length).padStart(2, '0')}`
-    }
     const known = new Set([0])
     const prepare = (n: number) => {
       if (n < 0 || n >= sections.length || known.has(n)) return
@@ -128,7 +180,6 @@ export function CinematicStage() {
         prepare(outgoing)
         if (incoming !== -1) {
           prepare(incoming)
-          setPortalTitle(incoming)
           field.dataset.incoming = chapters[incoming].id
         }
         sections.forEach((section, i) => {
@@ -147,8 +198,10 @@ export function CinematicStage() {
           section.inert = i !== readingIndex
           section.setAttribute('aria-hidden', String(i !== readingIndex))
         })
+        el.dataset.chapterIndex = String(readingIndex)
         setActive(readingIndex)
       }
+      if (p > .004) setStarted(true)
       sections.forEach((section, i) => {
         const isOutgoing = i === outgoing
         const isIncoming = i === incoming
@@ -159,8 +212,8 @@ export function CinematicStage() {
         section.style.setProperty('--scene-depth', local.toFixed(4))
         section.style.setProperty('--scene-leave', (isOutgoing && incoming !== -1 ? (1 - blend) : 1).toFixed(4))
         section.style.setProperty('--reveal-progress', blend.toFixed(4))
-        // Centered chapter glimpse runs first; the normal heading arrives after it clears.
-        // The actual artwork never moves or zooms; only the portal boundary expands.
+        // The incoming chapter's own heading, then its body, surface while the
+        // watercolor spreads over them. Artwork never moves or zooms.
         const titleOpacity = isIncoming ? wash.heading : incoming === -1 ? 1 : wash.departingHeading
         const textOpacity = isIncoming ? wash.body : incoming === -1 ? 1 : wash.departingBody
         section.style.setProperty('--title-opacity', titleOpacity.toFixed(4))
@@ -171,10 +224,6 @@ export function CinematicStage() {
         if (!diagonal) diagonal = Math.hypot(field.clientWidth, field.clientHeight)
         field.style.setProperty('--watercolor-aperture-size', (1 + 3.45 * diagonal * wash.aperture).toFixed(1) + 'px')
         field.style.setProperty('--pigment', wash.pigment.toFixed(4))
-        veil.style.setProperty('--glimpse-opacity', wash.cue.toFixed(4))
-        veil.style.setProperty('--glimpse-detail', wash.cueDetail.toFixed(4))
-        // -1 -> 1 across the card window: the caption rises gently through it.
-        veil.style.setProperty('--glimpse-drift', (clamp((blend - CARD_WINDOW.start) / (CARD_WINDOW.end - CARD_WINDOW.start)) * 2 - 1).toFixed(4))
       } else {
         delete field.dataset.incoming
       }
@@ -232,7 +281,6 @@ export function CinematicStage() {
       delete field.dataset.incoming
       field.style.removeProperty('--watercolor-aperture-size')
       field.style.removeProperty('--pigment')
-      veil.style.removeProperty('--glimpse-opacity')
       sections.forEach(section => {
         section.inert = false
         section.removeAttribute('aria-hidden')
@@ -266,12 +314,15 @@ export function CinematicStage() {
               start: () => `top top+=${mast.current!.offsetHeight}`,
               end: () => `+=${scrollDistance}`,
               // CSS position:sticky provides pinning; no jump-prone GSAP spacer.
-              scrub: .55,
+              // Steps glide chapter to chapter; a slightly longer scrub keeps
+              // native scrollbar drags just as smooth.
+              scrub: .8,
               invalidateOnRefresh: true,
             },
           })
           controller.current = tween.scrollTrigger!
         }, track)
+
       } else if (!canAnimate && ctx) {
         clear()
       }
@@ -306,6 +357,73 @@ export function CinematicStage() {
       if (ctx) requestAnimationFrame(() => ScrollTrigger.refresh())
     }
     window.addEventListener('resize', onResize)
+    // Sequential storytelling: inside the story every wheel notch, swipe or
+    // paging key moves exactly one chapter. Event details scroll natively.
+    let wheelSum = 0
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || (e.target instanceof Element && e.target.closest('.chapter-menu,.music-info-panel'))) return
+      const dy = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY
+      if (!dy) return
+      const dir = dy > 0 ? 1 : -1
+      if (!busy.current && !storyOwns(dir)) return
+      e.preventDefault()
+      lastInput.current = performance.now()
+      if (busy.current) { wheelSum = 0; return }
+      wheelSum += dy
+      if (Math.abs(wheelSum) >= 24) { wheelSum = 0; step(dir) }
+    }
+    let touchY: number | null = null
+    let touchDone = false
+    const onTouchStart = (e: TouchEvent) => {
+      touchY = e.touches.length === 1 ? e.touches[0].clientY : null
+      touchDone = false
+    }
+    const onTouchMove = (e: TouchEvent) => {
+      if (touchY === null || e.touches.length !== 1) return
+      const dy = touchY - e.touches[0].clientY
+      if (Math.abs(dy) < 6) return
+      const dir = dy > 0 ? 1 : -1
+      if (!busy.current && !storyOwns(dir)) return
+      if (e.cancelable) e.preventDefault()
+      lastInput.current = performance.now()
+      if (!touchDone && !busy.current && Math.abs(dy) > 36) { touchDone = true; step(dir) }
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return
+      const t = e.target as HTMLElement | null
+      if (t?.closest('input,textarea,select,[contenteditable="true"]')) return
+      const down = e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)
+      const up = e.key === 'ArrowUp' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)
+      if (!down && !up) return
+      if (e.key === ' ' && t?.closest('button,a,summary')) return
+      const dir = down ? 1 : -1
+      if (!busy.current && !storyOwns(dir)) return
+      e.preventDefault()
+      if (!busy.current) step(dir)
+    }
+    // A scrollbar drag (or find-in-page) that stops mid-wash eases to the nearest chapter.
+    let settle = 0
+    const onSettle = () => {
+      clearTimeout(settle)
+      if (busy.current || !controller.current) return
+      settle = window.setTimeout(() => {
+        if (busy.current || !controller.current) return
+        const { stops, detailsY } = positions()
+        const y = window.scrollY
+        if (y >= detailsY - 2 || stops.some(s => Math.abs(s - y) <= 3)) return
+        glideTo(stops.reduce((a, b) => Math.abs(b - y) < Math.abs(a - y) ? b : a))
+      }, 280)
+    }
+    window.addEventListener('wheel', onWheel, { passive: false })
+    document.addEventListener('touchstart', onTouchStart, { passive: true })
+    document.addEventListener('touchmove', onTouchMove, { passive: false })
+    document.addEventListener('keydown', onKey)
+    window.addEventListener('scroll', onSettle, { passive: true })
+    // Guests who pause on a chapter for a while get a gentle pulse on "Next".
+    let idle = 0
+    const arm = () => { setNudge(false); clearTimeout(idle); idle = window.setTimeout(() => setNudge(true), 6000) }
+    window.addEventListener('scroll', arm, { passive: true })
+    arm()
     fit()
     const initialHash = location.hash
     document.fonts.ready.then(() => {
@@ -321,6 +439,15 @@ export function CinematicStage() {
       cancelAnimationFrame(frame)
       reduced.removeEventListener('change', schedule)
       window.removeEventListener('resize', onResize)
+      window.removeEventListener('scroll', arm)
+      window.removeEventListener('wheel', onWheel)
+      document.removeEventListener('touchstart', onTouchStart)
+      document.removeEventListener('touchmove', onTouchMove)
+      document.removeEventListener('keydown', onKey)
+      window.removeEventListener('scroll', onSettle)
+      clearTimeout(idle)
+      clearTimeout(settle)
+      glide.current?.kill()
       clear()
       probe.remove()
       document.documentElement.style.removeProperty('--mast-actual')
@@ -337,12 +464,20 @@ export function CinematicStage() {
       <a className="details-link" href="#event-details" onClick={jump} aria-label="Skip animation to event details">Event details <Arrow diagonal /></a>
     </nav>
   </header>
-  <div className="story-runway" ref={runway}><div className="stage" ref={stage}><div className="spreads">
+  <div className="story-runway" ref={runway}>
+    <div className="stage" ref={stage}><div className="spreads">
     {chapters.map((ch, i) => <ChapterSpread key={ch.id} chapter={ch} ready={loaded.has(i)} />)}
     <WatercolorTransition />
-  </div><div className="stage-foot" aria-hidden="true">
-    <div className="scene-progress"><span>{String(active + 1).padStart(2, '0')} / 06</span><i><b className="progress-fill" /></i>
+    {!started && <button type="button" className={'scroll-hint' + (touch ? ' scroll-hint--touch' : '')} onClick={next}>
+      <span className="scroll-hint__icon" aria-hidden="true"><Arrow /><Arrow /></span>
+      <span>{touch ? 'Swipe up to begin' : 'Scroll down to begin'}</span>
+    </button>}
+  </div><div className="stage-foot">
+    <div className="scene-progress" aria-hidden="true"><span>{String(active + 1).padStart(2, '0')} / 06</span><i><b className="progress-fill" /></i>
       <span>{chapters[active].name}</span></div>
-    <div className="scroll-cue"><span>{active === 5 ? 'Event details' : 'Scroll to continue'}</span><Arrow /></div>
+    <button type="button" className={'next-chapter' + (nudge && started ? ' is-nudging' : '')} onClick={next}
+      aria-label={active === chapters.length - 1 ? 'Go to event details' : 'Next chapter: ' + chapters[active + 1].name}>
+      <span>{active === chapters.length - 1 ? 'Event details' : 'Next'}</span><Arrow />
+    </button>
   </div></div></div><InvitationMusic /></>
 }
