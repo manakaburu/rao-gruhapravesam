@@ -1,0 +1,895 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>:root {
+  color-scheme: light; --paper:#f5ecdd; --ink:#263b4d; --madder:#913f37; --brass:#b99558;
+  --leaf:#596947; --rule:#c9b899; --muted:#655846; --display:'Cormorant Garamond',Georgia,serif;
+  --utility:'DM Sans',Arial,sans-serif; --telugu:'Noto Serif Telugu','Nirmala UI',Gautami,serif;
+  --gutter:clamp(1rem,4.3vw,5.2rem); --header:clamp(3.6rem,8dvh,5.3rem); --foot:3.25rem;
+  --grain:url('../public/assets/paper-grain.png'); background:var(--paper); color:var(--ink); font-family:var(--utility);
+  font-synthesis:none; -webkit-text-size-adjust:100%;
+}
+*,*::before,*::after { box-sizing:border-box }
+body { margin:0; background:var(--paper) var(--grain) }
+h1,h2,h3,p,ol { margin:0 }
+em { font-weight:500 }
+a { color:inherit; text-underline-offset:.25em }
+a:focus-visible,summary:focus-visible,[tabindex]:focus-visible { outline:2px solid var(--madder); outline-offset:3px }
+::selection { background:#ead1b5 }
+.masthead {
+  height:var(--header); position:sticky; top:0; z-index:8; display:flex; align-items:center;
+  justify-content:space-between; gap:1rem; padding:0 max(var(--gutter),env(safe-area-inset-right)) 0 max(var(--gutter),env(safe-area-inset-left));
+  border-top:3px solid var(--madder); border-bottom:1px solid var(--rule); background:var(--paper) var(--grain);
+}
+.family-mark { display:flex; align-items:center; gap:.55rem; font:600 clamp(1.32rem,1.85vw,1.85rem)/1 var(--display) }
+.family-mark img { width:1.45em; height:1.45em }
+.shortcuts,.details-link,.scroll-cue,.scene-progress { display:flex; align-items:center }
+.shortcuts { gap:clamp(.75rem,2.2vw,2rem) }
+.shortcuts details { position:relative }
+.shortcuts summary,.details-link,.scroll-cue,.scene-progress,.section-label,.calendars>span,.zone {
+  font:500 .72rem/1.4 var(--utility); letter-spacing:.105em; text-transform:uppercase
+}
+.shortcuts summary,.details-link { cursor:pointer; min-height:44px; display:flex; align-items:center; gap:.45rem; text-decoration:none; color:var(--madder) }
+.shortcuts summary { list-style:none; color:var(--ink) }
+.shortcuts summary::-webkit-details-marker { display:none }
+.shortcuts summary::after { content:''; width:.42rem; height:.42rem; border:solid currentColor; border-width:0 1px 1px 0; transform:translateY(-2px) rotate(45deg) }
+.chapter-menu { position:absolute; top:100%; right:0; padding:.45rem .9rem; min-width:13.7rem; background:var(--paper) var(--grain); border:1px solid var(--rule); box-shadow:0 6px 18px #59462320; max-height:65dvh; overflow-y:auto }
+.chapter-menu a { display:flex; align-items:center; min-height:44px; text-decoration:none; font-size:.9rem }
+.chapter-menu .reading-link { border-top:1px solid var(--rule); color:var(--madder) }
+.shortcuts a:hover,.shortcuts summary:hover { text-decoration:underline }
+.arrow { width:1.15rem; height:1.15rem; flex-shrink:0 }
+
+.stage { position:relative; background:var(--paper) var(--grain); --arrival:1 }
+.spreads { position:relative }
+.spread {
+  position:relative; display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.25fr);
+  grid-template-areas:'head art' 'verse art'; align-content:center; gap:0 clamp(1.6rem,3.8vw,4.5rem);
+  padding:clamp(1.65rem,4.25vh,3.5rem) var(--gutter); scroll-margin-top:var(--header);
+}
+.spread+.spread { border-top:1px solid var(--rule) }
+.heading-block { grid-area:head; align-self:end; min-width:0; max-width:100%; overflow-wrap:anywhere }
+.verse-block { grid-area:verse; align-self:start; min-width:0 }
+.invocation { color:var(--leaf); font:500 clamp(.73rem,.88vw,.88rem)/1.65 var(--utility); margin-bottom:clamp(1rem,3vh,2.1rem) }
+.invocation [lang='te'] { font:400 1.22em/1.5 var(--telugu) }
+.invocation-dot { color:var(--brass) }
+.heading-block h1,.heading-block h2 { font:500 clamp(3rem,5.7vw,6.7rem)/.94 var(--display); letter-spacing:-.048em }
+.heading-block em,.event-details em { color:var(--madder) }
+.heading-block em { display:block }
+.spread--welcome h2 { font-size:clamp(2.65rem,4.9vw,6rem) }
+.floral-rule { display:flex; align-items:center; gap:.32rem; color:#997b45; margin:clamp(.8rem,2.5vh,1.8rem) 0 }
+.floral-rule i { height:1px; width:1.6rem; background:currentColor; opacity:.6 }
+.floral-rule svg { width:2.8rem; height:1.3rem }
+.verse { font:400 clamp(1rem,1.43vw,1.48rem)/1.85 var(--telugu); color:#693e36 }
+.imprint { margin-top:clamp(1.35rem,3.5vh,2.4rem); display:grid; gap:.4rem }
+.imprint span:first-child { font:600 clamp(1.15rem,1.55vw,1.55rem)/1.2 var(--display) }
+.imprint span+span,.zone { color:var(--muted); font-size:.8rem }
+.source-line { margin-top:1.25rem; max-width:28rem; font:500 clamp(1.2rem,1.65vw,1.6rem)/1.28 var(--display) }
+
+.plate { grid-area:art; justify-self:center; align-self:center; position:relative; width:min(100%,101dvh); aspect-ratio:4/3 }
+.painting { position:absolute; inset:0; overflow:hidden; mask-image:url('../public/assets/paper-edge.png'); mask-size:100% 100%; mask-repeat:no-repeat }
+.painting img { display:block; width:100%; height:100%; object-fit:contain }
+.plate--welcome img { position:absolute; width:144.2231%; height:auto; max-width:none; left:-38.0478%; top:-5.3121% }
+.art-description { display:grid; height:100%; place-items:center; text-align:center; padding:1.5rem; font-family:var(--display) }
+.spread--blessings { grid-template-columns:minmax(0,1.12fr) minmax(0,.92fr); grid-template-areas:'art head' 'art verse' }
+.plate--blessings { max-width:47rem }
+.spread--ceremonies,.spread--closing,.spread--feast { grid-template-columns:minmax(0,1fr) minmax(0,1.04fr) }
+.schedule-inset,.meal-inset,.closing-inset { grid-area:art; align-self:center; min-width:0 }
+.schedule-inset { padding:1.4rem clamp(1rem,3.5vw,3.8rem); border-left:1px solid var(--rule) }
+.plate--ceremonies,.plate--feast { aspect-ratio:1.95; width:min(100%,15rem); margin-top:1.2rem; mix-blend-mode:multiply }
+.plate--ceremonies { justify-self:start }
+.plate--ceremonies .painting,.plate--feast .painting { mask-image:none }
+.meal-inset { text-align:center; padding:1.6rem 0; }
+.plate--feast { width:min(100%,28rem); margin:0 auto 1.4rem; aspect-ratio:2.05 }
+.meal-inset>p { font:500 clamp(1.8rem,3.4vw,3.5rem)/1.15 var(--display); color:var(--leaf) }
+.meal-inset time { display:block; font-size:clamp(.9rem,1.15vw,1.1rem); margin-top:.7rem }
+.closing-inset { max-width:35.5rem; width:100%; justify-self:center; text-align:center; container-type:inline-size }
+.address-print { position:relative; display:grid; place-items:center; width:min(100%,26rem); margin:auto }
+.address-print .plate { grid-area:1/1; width:100% }
+.address-print address { grid-area:1/1; position:relative; width:61%; padding-top:1.7%; font:400 clamp(.78rem,1vw,.95rem)/1.36 var(--utility) }
+address { font-style:normal }
+address>* { display:block }
+.address-print strong { font:600 clamp(1.2rem,1.65vw,1.6rem)/1 var(--display); margin-bottom:.4rem }
+@container (max-width:17rem) {
+  .address-print { display:block }
+  .address-print .plate { aspect-ratio:7; margin-bottom:.65rem }
+  .address-print .painting img { object-fit:cover; object-position:top }
+  .address-print address { width:100%; overflow-wrap:anywhere }
+}
+.folio-corner { position:absolute; right:var(--gutter); top:.25rem; width:clamp(5.5rem,10vw,10rem); height:auto; opacity:.60; pointer-events:none; z-index:-1; mask:url('../public/assets/paper-edge.png') center / 100% 100% no-repeat }
+.spread--feast .folio-corner { left:var(--gutter); right:auto; top:-.75rem }
+.spread--ceremonies,.spread--feast { isolation:isolate }
+.stage.is-cinematic { height:calc(100vh - var(--mast-actual,var(--header))); height:calc(100dvh - var(--mast-actual,var(--header))); display:flex; flex-direction:column }
+.is-cinematic .spreads { flex:1; min-height:0; isolation:isolate }
+.is-cinematic .spread { position:absolute; inset:0 0 auto; min-height:100%; visibility:hidden; border:0 }
+.is-cinematic .spread.current { visibility:visible }
+.is-cinematic .spread--entrance .floral-petals { opacity:calc(.47 + var(--arrival)*.53); transform:translateY(calc((1 - var(--arrival))*2px)) }
+.is-cinematic .spread--entrance .verse { opacity:calc(.88 + var(--arrival)*.12) }
+.is-cinematic .folio-corner { transform:translateY(calc((1 - var(--arrival))*-7px)) }
+.folio-corner { top:.3rem; opacity:.36; mask:radial-gradient(ellipse,black 18%,transparent 71%) }
+.watercolor-veil { display:none }
+.stage-foot { display:none; height:var(--foot) }
+.is-cinematic .stage-foot { display:flex; flex:none; height:var(--foot); margin-inline:var(--gutter); border-top:1px solid var(--rule); align-items:center; justify-content:space-between; color:var(--muted) }
+.scene-progress,.scroll-cue { gap:.65rem }
+.scene-progress i { position:relative; height:1px; width:clamp(2rem,5vw,5rem); background:var(--rule) }
+.progress-fill { display:block; height:2px; width:100%; transform-origin:left; transform:scaleX(0); background:var(--madder) }
+
+.invitation-actions { font-size:.86rem }
+.action-row,.calendars>div { display:flex; flex-wrap:wrap; column-gap:1rem }
+.closing-inset .action-row,.closing-inset .calendars>div { justify-content:center }
+.action-row a,.calendars a,.family-phone { display:inline-flex; align-items:center; justify-content:center; min-height:44px; gap:.2rem; color:var(--madder) }
+.action-row .arrow { width:.85rem }
+.calendars { border-top:1px solid var(--rule); margin-top:.2rem; padding-top:.55rem }
+.calendars>span,.zone { font-size:.67rem; }
+.calendars a { font-size:.84rem; color:var(--ink) }
+.event-details { background:#f9f3e8 var(--grain); border-top:1px solid var(--rule); padding:clamp(2.5rem,6vw,5.5rem) var(--gutter); scroll-margin-top:var(--header) }
+.details-inner { max-width:68rem; margin:auto }
+.event-details h2 { font:500 clamp(3.15rem,5.3vw,5.1rem)/1 var(--display); letter-spacing:-.045em }
+.blessings { max-width:40rem; font:500 1.35rem/1.4 var(--display); margin:1rem 0 2.3rem }
+.details-columns { display:grid; grid-template-columns:1.15fr 1fr; gap:clamp(2rem,7vw,6rem) }
+.details-columns>div { border-top:1px solid var(--rule); padding-top:1.2rem }
+.section-label { color:var(--madder) }
+.time-zone { color:var(--muted); font-size:.8rem; margin:.5rem 0 }
+.events { list-style:none; padding:0 }
+.events li { padding:1.05rem 0 }
+.events li+li { border-top:1px solid var(--rule) }
+.events h3,.venue strong { font:600 clamp(1.5rem,2.35vw,2.25rem)/1.05 var(--display) }
+.events time { display:block; font:500 clamp(.94rem,1.15vw,1.1rem)/1.45 var(--utility); margin:.48rem 0 .3rem; color:var(--madder) }
+.events p,.venue { font:.88rem/1.55 var(--utility) }
+.venue address { margin:1rem 0 .2rem }
+.venue strong { margin-bottom:.6rem }
+.colophon { padding:1.1rem var(--gutter); border-top:1px solid var(--rule); display:flex; gap:1rem; justify-content:space-between; align-items:center; font:.78rem/1.4 var(--utility) }
+.colophon strong { font:600 1.35rem/1 var(--display) }
+.spread,.event-details { scroll-margin-top:var(--mast-actual,var(--header)) }
+
+@media(max-width:860px) and (orientation:portrait),(max-width:660px) {
+  :root { --header:3.6rem; --foot:2.9rem }
+  .spread,.spread--blessings,.spread--ceremonies,.spread--feast,.spread--closing {
+    grid-template:'head' auto 'art' auto 'verse' auto / minmax(0,1fr); text-align:center; gap:clamp(.8rem,1.8svh,1.3rem);
+    padding:clamp(1.4rem,3.1svh,2.5rem) var(--gutter); justify-items:center
+  }
+  .spread--closing { grid-template-areas:'head' 'verse' 'art' }
+  .heading-block h1,.heading-block h2 { font-size:clamp(2.6rem,min(10.5vw,6.1svh),4.8rem) }
+  .invocation { font-size:.73rem; margin-bottom:.54rem }
+  .plate { width:min(100%,54svh,41rem) }
+  .verse { font-size:clamp(1rem,2.5vw,1.25rem); line-height:1.72 }
+  .floral-rule { justify-content:center; margin:0 0 .42rem }
+  .floral-rule svg { width:2.3rem; height:1.1rem }
+  .imprint,.source-line { margin-top:.65rem }
+  .imprint { gap:.2rem }
+  .source-line { font-size:1.21rem; margin-inline:auto }
+  .schedule-inset { border-left:0; border-block:1px solid var(--rule); width:min(100%,35rem); padding:.25rem .25rem .65rem }
+  .schedule-inset .events li { padding:.65rem 0 }
+  .schedule-inset .events p { font-size:.82rem }
+  .plate--ceremonies { width:9rem; margin:.45rem auto 0 }
+  .meal-inset { padding:.5rem 0; width:100% }
+  .plate--feast { width:min(88%,22rem); margin:0 auto .6rem }
+  .address-print { width:min(100%,23.5rem) }
+  .address-print address { font-size:.8rem }
+  .folio-corner { width:4.5rem; right:var(--gutter); top:.3rem; opacity:.3 }
+  .scene-progress,.scroll-cue { gap:.4rem; font-size:.64rem; letter-spacing:.07em }
+}
+@media(max-width:660px) {
+  :root { --gutter:1rem }
+  .masthead { height:auto; min-height:var(--header); flex-wrap:wrap; gap:0 .6rem }
+  .shortcuts { margin-left:auto }
+  .details-columns { grid-template-columns:minmax(0,1fr) }
+  .family-mark { font-size:1.18rem; gap:.26rem }
+  .family-mark img { width:1.25em; height:1.25em }
+  .shortcuts { gap:.8rem }
+  .shortcuts summary,.details-link { font-size:.62rem; letter-spacing:.055em }
+  .details-link .arrow { width:.85rem }
+  .colophon { flex-direction:column; text-align:center; gap:.45rem }
+}
+@media(max-width:380px) {
+  .masthead { gap:.35rem }
+  .shortcuts { gap:.52rem }
+  .details-link { gap:.12rem }
+  .scene-progress i { width:1.65rem }
+  .chapter-menu { right:-3.5rem }
+}
+@media(max-width:460px) {
+  .scene-progress i { display:none }
+  .scene-progress,.scroll-cue { white-space:nowrap }
+}
+@media print {
+  .masthead,.stage-foot,.watercolor-veil,.shortcuts,.invitation-actions { display:none!important }
+  .stage,.pin-spacer,.stage .spreads,.stage .spread { height:auto!important; padding-block:1rem!important; position:static!important; transform:none!important; visibility:visible!important; display:block!important }
+  .spread,.events li { break-inside:avoid }
+}
+
+
+/* Creative director v2 — scroll-scrubbed living watercolor story. */
+.spread { isolation:isolate; overflow:hidden }
+.spread>.heading-block,.spread>.verse-block,.spread>.plate,.spread>.schedule-inset,.spread>.meal-inset,.spread>.closing-inset { position:relative; z-index:1 }
+.story-ornaments { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; opacity:.75 }
+.story-layer { position:absolute; display:block; height:auto; transform-origin:top center }
+.is-cinematic .current .story-layer { will-change:transform }
+.story-layer--vine { width:clamp(3rem,6.8vw,7rem); left:calc(var(--gutter) * -.75); top:.25rem; opacity:.68 }
+.story-layer--bell { width:clamp(1.6rem,2.5vw,2.35rem); right:.75%; top:-.9rem; opacity:.65 }
+.story-layer--lotus { width:clamp(2.75rem,4.1vw,4rem); bottom:-.8rem; right:.45%; opacity:.57 }
+.story-petal { position:absolute; display:block; width:11px; height:17px; background:linear-gradient(135deg,#dca862 12%,#ac5944 70%,#8b4a38); border-radius:90% 0 90% 0; opacity:.48 }
+.story-petal--one { left:0; top:19%; rotate:24deg }
+.story-petal--two { right:.45%; top:43%; rotate:-33deg; width:8px; height:14px }
+.story-petal--three { left:.2%; bottom:16%; rotate:60deg; width:9px; height:14px }
+.story-ornaments--blessings .story-layer--vine,.story-ornaments--blessings .story-layer--lotus { opacity:.36 }
+.story-ornaments--blessings .story-layer--bell { opacity:.63 }
+.story-ornaments--closing .story-layer--vine,.story-ornaments--closing .story-layer--lotus { opacity:.42 }
+.story-ornaments--ceremonies .story-layer--lotus { opacity:.78 }
+.story-ornaments--feast .story-layer--vine,.story-ornaments--feast .story-layer--lotus { opacity:.72 }
+/* The true separate art planes — original paintings themselves stay untouched. */
+.is-cinematic .spread.current .story-layer--near {
+  transform:translate3d(calc((1 - var(--scene-arrive,1)) * -24px),calc((1 - var(--scene-arrive,1)) * 30px + var(--scene-depth,0) * -19px),0) rotate(calc((var(--scene-depth,0) * 4deg) - 2deg));
+}
+.is-cinematic .spread.current .story-layer--mid {
+  transform:translate3d(0,calc((1 - var(--scene-arrive,1)) * -23px + var(--scene-depth,0) * -9px),0) rotate(calc(var(--scene-depth,0) * 3deg));
+}
+.is-cinematic .spread.current .story-ornaments { opacity:calc((.30 + .70 * var(--scene-arrive,1)) * (.55 + .45 * var(--scene-leave,1))) }
+.is-cinematic .spread:is(.current,.departing,.revealing) .story-petal--one { transform:translate3d(calc(var(--scene-depth,0) * 25px),calc(var(--scene-depth,0) * 20px),0) }
+.is-cinematic .spread:is(.current,.departing,.revealing) .story-petal--two { transform:translate3d(calc(var(--scene-depth,0) * -19px),calc(var(--scene-depth,0) * 26px),0) }
+.is-cinematic .spread:is(.current,.departing,.revealing) .story-petal--three { transform:translate3d(calc(var(--scene-depth,0) * 12px),calc(var(--scene-depth,0) * -21px),0) }
+.is-cinematic .spread.current .heading-block { opacity:calc(.16 + .84 * var(--scene-arrive,1)); transform:translate3d(0,calc((1 - var(--scene-arrive,1)) * 14px),0) }
+.is-cinematic .spread.current .verse-block { opacity:calc(.08 + .92 * var(--scene-arrive,1)); transform:translate3d(0,calc((1 - var(--scene-arrive,1)) * 18px),0) }
+.is-cinematic .spread.current .verse span { display:block }
+.is-cinematic .spread.current .verse span:nth-child(2) { opacity:calc(.18 + var(--scene-arrive,1) * .82); transform:translateY(calc((1 - var(--scene-arrive,1)) * 5px)) }
+.is-cinematic .spread.current .verse span:nth-child(3) { opacity:calc(.09 + var(--scene-arrive,1) * .91); transform:translateY(calc((1 - var(--scene-arrive,1)) * 9px)) }
+/* Devotional scene: static deity, softly appearing verse / English. The glow is external. */
+.spread--blessings .plate::after {
+  content:''; position:absolute; inset:5% 3%; pointer-events:none; z-index:2;
+  background:radial-gradient(ellipse at 51% 35%,#f8db8771 0%,#f8db870c 43%,transparent 70%);
+  mix-blend-mode:screen; opacity:.48; border-radius:50%;
+}
+.is-cinematic .spread--blessings:is(.current,.revealing) .plate::after { opacity:calc(.20 + var(--scene-arrive,1) * .38) }
+.is-cinematic .spread--blessings:is(.current,.revealing) .verse .verse-line:nth-child(2) { opacity:clamp(0,calc((var(--scene-arrive,1) - .16) * 2.6),1) }
+.is-cinematic .spread--blessings:is(.current,.revealing) .verse .verse-line:nth-child(3) { opacity:clamp(0,calc((var(--scene-arrive,1) - .34) * 2.6),1) }
+.is-cinematic .spread--blessings:is(.current,.revealing) .source-line { opacity:clamp(0,calc((var(--scene-arrive,1) - .72) * 3.58),1); transform:translateY(calc((1 - var(--scene-arrive,1)) * 8px)) }
+/* Ceremonies: image full-painterly; factual schedule accessible and stationary once visible. */
+.plate--ceremonies { width:min(100%,clamp(13rem,24vw,25rem)); aspect-ratio:4/3; margin-top:clamp(.5rem,1.2vh,1rem) }
+.plate--ceremonies .painting,.plate--feast .painting { mask-image:url('../public/assets/paper-edge.png'); mask-size:100% 100%; mask-repeat:no-repeat }
+.plate--feast { width:min(100%,clamp(17rem,36vw,30rem)); aspect-ratio:4/3; margin-inline:auto }
+.spread--feast .meal-inset { padding-block:.45rem }
+.spread--feast .meal-inset>p { font-size:clamp(1.5rem,2.9vw,3rem) }
+.feast-reveal { position:relative; width:100% }
+.meal-flourish { position:absolute; inset:0; pointer-events:none; z-index:3 }
+.meal-flourish span { position:absolute; width:13px; height:16px; border-radius:85% 0 85% 0; background:linear-gradient(135deg,#e2ac5b,#ad5841); box-shadow:0 0 0 1px #9b654733; opacity:0 }
+.meal-flourish span:nth-child(1) { top:13%; left:12%;rotate:30deg }
+.meal-flourish span:nth-child(2) { top:20%; right:15%;rotate:100deg; --beat:.12 }
+.meal-flourish span:nth-child(3) { bottom:18%; left:25%;rotate:-25deg; --beat:.24 }
+.meal-flourish span:nth-child(4) { bottom:16%; right:21%;rotate:65deg; --beat:.32 }
+.meal-flourish span:nth-child(5) { top:34%; right:5%;rotate:12deg; --beat:.4 }
+.is-cinematic .spread--feast:is(.current,.revealing,.departing) .meal-flourish span {
+  --petal:clamp(0,calc((var(--scene-arrive,1) - var(--beat,0)) * 1.65),1);
+  opacity:calc(var(--petal) * .72);
+  transform:translateY(calc((1 - var(--petal)) * 16px)) scale(calc(.58 + .42 * var(--petal))) rotate(calc((var(--petal) - 1) * 16deg))
+}
+.is-cinematic .spread--feast.current .meal-inset>.feast-reveal { transform:translateY(calc((1 - var(--scene-arrive,1)) * 13px)) scale(calc(.975 + .025 * var(--scene-arrive,1))); opacity:calc(.34 + .66 * var(--scene-arrive,1)) }
+.is-cinematic .spread--ceremonies.current .schedule-inset { opacity:calc(.12 + .88 * var(--scene-arrive,1)); transform:translateY(calc((1 - var(--scene-arrive,1)) * 11px)) }
+.is-cinematic .spread--closing.current .closing-inset { opacity:calc(.16 + .84 * var(--scene-arrive,1)); transform:translateY(calc((1 - var(--scene-arrive,1)) * 9px)) }
+/* Closing illustration is an ornamental image frame. Text remains live above it. */
+.address-print .plate { aspect-ratio:4/3 }
+.address-print address { width:63%; max-width:none; padding:.2rem; overflow-wrap:break-word }
+.address-print address>* { display:block }
+/* Layout clamps: make the small-screen story readable instead of silently turning off pinning. */
+@media(max-width:860px) and (orientation:portrait),(max-width:660px) {
+  .story-layer--vine { width:3.25rem; left:-1.15rem; opacity:.42 }
+  .story-layer--bell { width:1.5rem; right:1%; top:-.7rem }
+  .story-layer--lotus { width:2.7rem; right:.25rem; bottom:-.75rem; opacity:.32 }
+  .plate--ceremonies { width:min(100%,12rem); margin:.1rem auto }
+  .plate--feast { width:min(100%,19rem); aspect-ratio:4/3; margin:0 auto .28rem }
+  .spread--feast .meal-inset>p { font-size:1.65rem }
+  .spread--feast .meal-inset { padding:.25rem }
+  .spread--ceremonies .schedule-inset { padding:.2rem .15rem }
+  .spread--ceremonies .events li { padding:.38rem 0 }
+  .spread--ceremonies .events p { font-size:.76rem }
+  .spread--ceremonies .events h3 { font-size:1.4rem }
+  .spread--ceremonies .events time { margin:.13rem 0 }
+  .spread--closing .address-print { width:min(100%,21rem) }
+}
+@media(prefers-reduced-motion:reduce) {
+  .story-layer,.story-ornaments,.meal-flourish span,.spread * { animation:none!important; transition:none!important }
+}
+
+.verse-line { display:block; }
+
+/* 2026-11-18 / Story Mode Restoration — signed off art direction
+   The incoming *whole painted page* grows organically through a textured alpha mask.
+   No opaque scene switch. All progress is GSAP-scroll-driven and reversible. */
+.is-cinematic .spread.current,
+.is-cinematic .spread.departing,
+.is-cinematic .spread.revealing { visibility:visible; }
+.is-cinematic .spread.current,
+.is-cinematic .spread.departing,
+.is-cinematic .spread.revealing {
+  background:var(--paper) var(--grain);
+  border:0;
+  backface-visibility:hidden;
+}
+.is-cinematic .spread.revealing {
+  -webkit-mask-image:url('../public/assets/watercolor-mask.png');
+  mask-image:url('../public/assets/watercolor-mask.png');
+  -webkit-mask-size:var(--reveal-size,1%) var(--reveal-size,1%);
+  mask-size:var(--reveal-size,1%) var(--reveal-size,1%);
+  -webkit-mask-position:50% 50%; mask-position:50% 50%;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+}
+/* Typography fades independently of the painted plate, including nested illustrations. */
+.is-cinematic .spread:is(.departing,.revealing) :is(.heading-block,.verse-block>.floral-rule,.verse-block>.verse,.imprint,.source-line,.schedule-inset,.meal-inset>p,.meal-inset>time,.address-print address,.invitation-actions) {
+  opacity:var(--text-opacity,1)
+}
+/* Art participates in the camera movement; don't fake separate layers within a flattened painting. */
+.is-cinematic .spread:is(.current,.departing,.revealing) .plate {
+  transform:translate(var(--art-x,0px),var(--art-y,0px));
+  scale:var(--art-scale,1);
+  transform-origin:50% 55%;
+}
+.is-cinematic .spread:is(.current,.departing,.revealing) .story-layer--near {
+  transform:translate3d(var(--near-x,0px),var(--near-y,0px),0) rotate(var(--ornament-rotation,0deg));
+}
+.is-cinematic .spread:is(.current,.departing,.revealing) .story-layer--mid {
+  transform:translate3d(0,var(--mid-y,0px),0) rotate(var(--ornament-rotation,0deg));
+}
+.is-cinematic .spread:is(.current,.departing,.revealing) .story-ornaments {
+  opacity:.82;
+}
+/* Keep the icon and the live address fixed within their respective frames. */
+.is-cinematic .spread--blessings:is(.current,.departing,.revealing) .plate,
+.is-cinematic .spread--closing:is(.current,.departing,.revealing) .plate { transform:none; scale:1 }
+@media(max-width:860px) {
+  .is-cinematic .spread:is(.current,.departing,.revealing):not(.spread--blessings,.spread--closing) .plate {
+    transform:translate(calc(var(--art-x,0px) * .36),calc(var(--art-y,0px) * .45));
+    scale:calc(1 + (var(--art-scale,1) - 1) * .4)
+  }
+}
+/* Warm paint bloom: atmospheric highlights, never a solid parchment cover. */
+.is-cinematic .watercolor-veil:not([hidden]) {
+  position:absolute;inset:0;pointer-events:none;z-index:4;display:block;
+  opacity:var(--mist-opacity,0);
+  -webkit-mask:none;mask:none;
+  background:radial-gradient(ellipse at 54% 53%,#fff9ec 0%,#fae4bcbb 39%,transparent 76%),
+             radial-gradient(ellipse at 22% 27%,#df9d69aa 0%,transparent 62%);
+  transform:translateY(var(--mist-shift,0px));
+  mix-blend-mode:screen;
+}
+/* Respect the native composition of the *entire* banana-leaf painting. */
+.plate--feast,
+.spread--feast .plate--feast {
+  width:min(100%,clamp(22rem,42vw,40rem));
+  aspect-ratio:4 / 3;
+  margin:0 auto .45rem;
+  mix-blend-mode:normal;
+}
+.plate--feast .painting,
+.spread--feast .plate--feast .painting {
+  -webkit-mask:none !important;mask:none !important;
+  inset:0;overflow:visible;
+}
+.plate--feast picture,.plate--feast img { display:block;width:100%;height:100%; }
+.plate--feast img { object-fit:contain;object-position:center; }
+.spread--feast .meal-inset { padding:.2rem 0; }
+.spread--feast .meal-inset>p { font-size:clamp(1.6rem,2.8vw,2.65rem); }
+/* Reduced-height phones: never clip the meal to a decorative horizontal strip. */
+@media(max-width:860px) and (orientation:portrait),(max-width:660px) {
+  .plate--feast,.spread--feast .plate--feast { width:min(100%,21rem,38svh);aspect-ratio:4 / 3;margin:0 auto .35rem; }
+  .spread--feast .meal-inset { width:100%;padding:0; }
+  .spread--feast .meal-inset>p { font-size:clamp(1.4rem,5vw,1.8rem); }
+}
+@media(max-height:800px) {
+  .compact-story .spread { padding-block:clamp(.4rem,1.5dvh,.9rem); }
+  .compact-story .spread .floral-rule { margin:.3rem 0 .42rem; }
+  .compact-story .invocation { margin-bottom:.4rem; }
+  .compact-story .imprint { margin-top:.45rem; }
+  .compact-story .plate--entrance,.compact-story .plate--welcome,.compact-story .plate--blessings { width:min(100%,48dvh,36rem); }
+  .compact-story .plate--feast { width:min(100%,33dvh,20rem); }
+  .compact-story .spread--feast .meal-inset>p { font-size:1.38rem; }
+  .compact-story .verse { line-height:1.54;font-size:clamp(.94rem,2.3vw,1.25rem); }
+  .compact-story .heading-block h1,.compact-story .heading-block h2 { font-size:clamp(2.4rem,4.3vw,4.6rem); }
+}
+/* If content cannot safely fit a pinned screen, graceful motion survives in reading layout. */
+.stage.story-fallback .spread { background:var(--paper) var(--grain); }
+.stage.story-fallback .spread .plate,
+.stage.story-fallback .spread .heading-block,
+.stage.story-fallback .spread .verse-block,
+.stage.story-fallback .spread .meal-inset,
+.stage.story-fallback .spread .schedule-inset,
+.stage.story-fallback .spread .closing-inset {
+  opacity:.4; transform:translateY(18px);
+  transition:opacity .85s ease, transform .85s cubic-bezier(.2,.65,.24,1);
+}
+.stage.story-fallback .spread.in-view .plate,
+.stage.story-fallback .spread.in-view .heading-block,
+.stage.story-fallback .spread.in-view .verse-block,
+.stage.story-fallback .spread.in-view .meal-inset,
+.stage.story-fallback .spread.in-view .schedule-inset,
+.stage.story-fallback .spread.in-view .closing-inset { opacity:1;transform:none; }
+@media(prefers-reduced-motion:reduce) {
+  .is-cinematic .spread,.story-fallback .spread * { animation:none!important;transition:none!important;transform:none!important; }
+}
+/* Compact-height desktop stays richly illustrated; don't treat a 1794×687 desktop as a phone. */
+@media (min-width:861px) and (max-height:800px) {
+  .compact-story .plate--ceremonies { width:min(100%,46dvh,22rem) }
+  .compact-story .plate--entrance,
+  .compact-story .plate--welcome,
+  .compact-story .plate--blessings { width:min(100%,69dvh,42rem); }
+  .compact-story .plate--feast,
+  .compact-story .spread--feast .plate--feast { width:min(100%,68dvh,35rem); }
+  .compact-story .spread { padding-block:.5rem; }
+}
+@media (max-width:860px) and (max-height:800px) {
+  .compact-story .plate--entrance,
+  .compact-story .plate--welcome,
+  .compact-story .plate--blessings { width:min(100%,43dvh,25rem); }
+  .compact-story .plate--feast,
+  .compact-story .spread--feast .plate--feast { width:min(100%,32dvh,19rem); }
+}
+
+
+/* CINEMATIC PACING / DESKTOP ART SCALE — 2026-11-18 refinement.
+   Desktop artwork is sized by both available column width and safe stage height.
+   Keep mobile, compact-height, reading mode, deity movement and reduced-motion
+   behavior unchanged. This block intentionally follows older broad selectors. */
+@media (min-width:1180px) and (min-height:801px) {
+  /* Entrance and welcome have breathing room without hiding the muggu or plants. */
+  .spread--entrance>.plate,
+  .spread--welcome>.plate {
+    width:min(calc(100% + 1.25vw),108dvh);
+  }
+  /* Blessings image was capped at 47rem even when the left column had space. */
+  .spread--blessings>.plate { max-width:min(51rem,100%); }
+  /* Ceremony artwork used just 400×300px on a 1714px desktop, even though the
+     column had room. 28vw approaches 480px while its height still fits the pin. */
+  .spread--ceremonies { padding-block:clamp(.8rem,1.7vh,1.05rem); }
+  .spread--ceremonies .plate--ceremonies {
+    width:min(100%,clamp(19rem,27vw,29rem));
+    margin-top:clamp(.35rem,1.05vh,.85rem);
+  }
+  /* Full painted meal stays within its 4:3 boundaries (object-fit:contain). */
+  .spread--feast .plate--feast,
+  .plate--feast { width:min(100%,clamp(25rem,42vw,43rem)); }
+  .spread--closing .address-print { width:min(100%,29rem); }
+}
+
+
+/* Slow pigment dissolve: fade the outgoing painting under the expanding alpha
+   reveal, instead of leaving a second full-strength scene behind the next one.
+   CSS variable derives entirely from scroll progress, so reverse is identical. */
+.is-cinematic .spread.departing .plate {
+  opacity:calc(var(--scene-leave,1) * var(--scene-leave,1));
+}
+
+
+/* Mobile-scroll stability / 2026-11-19
+ * Touch browsers change visual viewport height during native scrolling.
+ * Use the natural document for touch and apply one-time chapter watercolor
+ * entrance reveals. The pinned GSAP choreography is desktop-only.
+ */
+@media (max-width:900px), (hover:none), (pointer:coarse) {
+  .stage:not(.is-cinematic) { height:auto; min-height:0; }
+  .stage.story-fallback .spreads { height:auto; display:block; }
+  .stage.story-fallback .plate { max-width:min(100%,59svh); }
+  .stage.story-fallback .chapter-menu { max-height:65svh; }
+  .stage.story-fallback .spread {
+    position:relative; inset:auto; height:auto; min-height:0;
+    padding-block:clamp(2rem,6vw,3.8rem);
+    scroll-margin-top:calc(var(--mast-actual,var(--header)) + .5rem);
+    overflow:hidden;
+  }
+  .stage.story-fallback .spread .plate,
+  .stage.story-fallback .spread .heading-block,
+  .stage.story-fallback .spread .verse-block,
+  .stage.story-fallback .spread .meal-inset,
+  .stage.story-fallback .spread .schedule-inset,
+  .stage.story-fallback .spread .closing-inset {
+    transition:opacity .7s ease-out,transform .85s cubic-bezier(.19,.7,.25,1);
+  }
+  /* Mobile chapters still unfold as illustrated moments, but never pin or
+     modify page geometry while the address bar is animating. */
+  .stage.story-fallback .spread::before {
+    content:''; position:absolute; inset:0; pointer-events:none; z-index:2;
+    background:radial-gradient(ellipse at center,#f9dfb55e 0%,#f5ecdd5c 35%,transparent 76%);
+    opacity:.5; transition:opacity 1.1s ease-out;
+  }
+  .stage.story-fallback .spread.in-view::before { opacity:0; }
+  .stage.story-fallback .spread .heading-block { transition-delay:0s; }
+  .stage.story-fallback .spread .plate { transform:translateY(10px); transition-delay:.12s; }
+  .stage.story-fallback .spread .verse-block { transition-delay:.2s; }
+  .stage.story-fallback .spread.in-view .plate { transform:none; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .stage.story-fallback .spread * {transition:none!important;animation:none!important;transform:none!important;opacity:1!important}
+}
+/* Persistent, user-initiated SoundCloud music panel. Not an autoplay mp3 player. */
+.soundcloud-music { position:fixed; right:max(1rem,env(safe-area-inset-right)); bottom:max(1.25rem,env(safe-area-inset-bottom)); z-index:30; font-family:var(--utility); }
+.music-launch { display:flex;align-items:center;gap:.3rem;border:1px solid #b995588a; background:#fff7e9ee;color:var(--madder);box-shadow:0 5px 18px #4d332229;border-radius:99px;padding:.56rem .75rem;cursor:pointer;min-height:44px;backdrop-filter:blur(7px); }
+.music-launch:focus-visible,.music-sheet-close:focus-visible { outline:2px solid var(--madder);outline-offset:3px; }
+.music-launch-text {font-size:.75rem;letter-spacing:.03em;font-weight:500;}
+.music-sheet { position:absolute; right:0;bottom:calc(100% + .55rem); width:min(350px,calc(100vw - 2rem));padding:1rem;border-radius:15px;background:#fff9ee; border:1px solid var(--rule); box-shadow:0 14px 44px #3e302b39; visibility:hidden;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s; }
+.music-sheet.is-open { visibility:visible;opacity:1;pointer-events:auto;transform:none; }
+.music-sheet-head {display:flex;gap:.65rem;align-items:start;justify-content:space-between;}
+.music-sheet-head strong {display:block;font:600 1.25rem/1.1 var(--display);color:var(--ink)}
+.music-sheet-head small {font-size:.72rem;color:var(--muted)}
+.music-sheet-close {background:none;border:0;font-size:1.7rem;line-height:1;color:var(--madder);cursor:pointer;min-height:35px;min-width:35px;}
+.music-sheet-note {font-size:.78rem;line-height:1.55;color:var(--muted);margin:.65rem 0;}
+.music-sheet iframe {border:0;margin:.75rem 0 .1rem;display:block;}
+.soundcloud-link {display:block;font-size:.78rem;color:var(--madder);margin-top:.5rem;}
+.music-rights {display:block;color:var(--muted);font-size:.65rem;line-height:1.4;margin-top:.65rem;}
+@media (min-width:901px) and (hover:hover) and (pointer:fine) {
+  .soundcloud-music {top:calc(var(--mast-actual,var(--header)) + 1rem);bottom:auto;}
+  .music-sheet {top:calc(100% + .55rem);bottom:auto;}
+}
+@media(max-width:420px) {.music-launch-text{display:none}.music-launch{width:44px;height:44px;justify-content:center;padding:0}}
+@media(prefers-reduced-motion:reduce) {.music-sheet{transition:none}}
+
+
+/* ===== RELEASE 4: FIXED PAINTINGS · TITLE-LED DISSOLVES · CONTINUOUS FOLIAGE =====
+   These rules supersede the older scroll-camera and falling-petal transforms.
+   All the paintings stay on their original coordinates. */
+.is-cinematic .spread:is(.current,.departing,.revealing) .plate,
+.is-cinematic .spread:is(.current,.departing,.revealing) .plate--blessings,
+.is-cinematic .spread:is(.current,.departing,.revealing) .plate--closing,
+.stage.story-fallback .spread .plate,
+.stage.story-fallback .spread.in-view .plate {
+  transform:none !important;
+  scale:1 !important;
+  transform-origin:center !important;
+}
+/* Prevent all inherited scroll-keyed movement in decorative leaves and ornaments. */
+.is-cinematic .spread:is(.current,.departing,.revealing) .story-petal {
+  transform:none !important;
+}
+/* Keep the outgoing scene in place under the incoming one. Reveal only the
+   incoming ART with the paper texture; title and words have independent fades. */
+.is-cinematic .spread.revealing {
+  -webkit-mask:none !important;
+  mask:none !important;
+  background:transparent !important;
+}
+.is-cinematic .spread.revealing .plate {
+  -webkit-mask-image:url('../public/assets/watercolor-mask.png');
+  mask-image:url('../public/assets/watercolor-mask.png');
+  -webkit-mask-size:var(--reveal-size,1%) var(--reveal-size,1%);
+  mask-size:var(--reveal-size,1%) var(--reveal-size,1%);
+  -webkit-mask-position:50% 50%; mask-position:50% 50%;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+}
+/* The incoming heading arrives EARLY, before its full description and painting.
+   Departing heading is almost gone before incoming words appear. */
+.is-cinematic .spread:is(.revealing,.departing) .heading-block {
+  opacity:var(--title-opacity,1) !important;
+  transform:none !important;
+}
+.is-cinematic .spread:is(.revealing,.departing) .verse-block,
+.is-cinematic .spread:is(.revealing,.departing) .schedule-inset,
+.is-cinematic .spread:is(.revealing,.departing) .meal-inset,
+.is-cinematic .spread:is(.revealing,.departing) .closing-inset {
+  opacity:var(--text-opacity,1) !important;
+  transform:none !important;
+}
+/* Individual nested text still observes the scene opacity; no animation of font metrics. */
+.is-cinematic .spread:is(.revealing,.departing) :is(.verse,.source-line,.imprint,.schedule-inset,.meal-inset>p,.meal-inset>time,.address-print address,.invitation-actions) {
+  opacity:1;
+  transform:none;
+}
+/* Mobile: no shifting art, and next chapter heading appears first. */
+.stage.story-fallback .spread .heading-block { transition:opacity .9s ease-out !important;transform:none !important;transition-delay:0s !important }
+.stage.story-fallback .spread .plate { transition:opacity 1.15s ease-out !important; transition-delay:.22s !important }
+.stage.story-fallback .spread .verse-block { transition:opacity 1s ease-out !important;transform:none !important;transition-delay:.42s !important }
+.stage.story-fallback .spread .meal-inset,
+.stage.story-fallback .spread .schedule-inset,
+.stage.story-fallback .spread .closing-inset {transform:none !important; transition:opacity 1s ease-out !important;transition-delay:.35s !important}
+/* Global floating foliage: one inexpensive compositor-driven animation, completely
+   independent of scroll position. Interactions beneath remain available. */
+.falling-leaves {
+  position:fixed; inset:0; pointer-events:none; overflow:hidden;
+  z-index:7; contain:strict;
+}
+.falling-leaf {
+  position:absolute; top:-12vh; display:block;
+  border-radius:2% 85% 10% 85%;
+  background:linear-gradient(135deg,#b78b3d 0%,#8b994d 50%,#78804b 100%);
+  box-shadow:0 0 0 .3px #7f674b88;
+  opacity:0;
+  will-change:transform;
+  animation:rao-leaf-fall linear infinite;
+}
+.falling-leaf:nth-child(3n+2) { background:linear-gradient(135deg,#b48b56,#c3a46c 57%,#b9784d) }
+.falling-leaf:nth-child(4n) { background:linear-gradient(135deg,#81975d,#77905b 60%,#aa925c) }
+@keyframes rao-leaf-fall {
+  0% {transform:translate3d(0,-12vh,0) rotate(-24deg); opacity:0}
+  9% {opacity:.48}
+  83% {opacity:.42}
+  100% {transform:translate3d(var(--drift),118svh,0) rotate(var(--spin));opacity:0}
+}
+/* Small, calm local-audio controls near bottom right; never obscure navigation. */
+.invitation-music { position:fixed; z-index:31; right:max(12px,env(safe-area-inset-right)); bottom:max(15px,env(safe-area-inset-bottom)); display:flex;align-items:center;gap:4px;font-family:var(--utility); }
+.music-button,.music-info-toggle {border:1px solid #b995588a; background:#fff7e9ed; color:var(--madder); box-shadow:0 5px 18px #4d332220; border-radius:99px; cursor:pointer; display:flex;align-items:center;justify-content:center;min-height:44px;}
+.music-button {gap:7px;padding:7px 13px;font-size:.8rem;}
+.music-button>span:first-child {font-size:21px;min-width:20px;line-height:1}
+.music-button.is-playing>span:first-child {animation:rao-note-pulse 2.8s ease-in-out infinite}
+.music-info-toggle {width:30px;min-height:30px;font:bold 13px var(--utility);opacity:.85}
+.music-info-panel {position:absolute;bottom:calc(100% + 8px);right:0;background:#fff9ed;max-width:min(320px,calc(100vw - 24px));width:285px;border:1px solid #b995588a;box-shadow:0 12px 24px #4636272b;border-radius:9px;padding:12px;display:grid;gap:8px;font-size:12px;line-height:1.45}
+.music-info-panel strong {font-family:var(--display);font-size:18px}
+.music-info-panel a{color:var(--madder)}
+.music-error{position:absolute;bottom:calc(100% + 8px);right:0;font-size:11px;color:var(--madder);white-space:nowrap}
+@keyframes rao-note-pulse {50%{opacity:.5}}
+@media(max-width:700px) {
+  .music-label{display:none}
+  .music-button{width:44px;height:44px;padding:0}
+  .falling-leaf:nth-child(n+6){display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .falling-leaves{display:none}
+  .music-button.is-playing>span:first-child {animation:none}
+  .stage.story-fallback .spread * {transition:none !important;animation:none !important}
+}
+
+/* The previous image fades earlier to avoid the two illustrations ghosting together. */
+.is-cinematic .spread.departing .plate { opacity:var(--paint-depart-opacity,1) !important }
+@media(max-width:700px) { .music-info-toggle{display:none} }
+
+/* ===== V5: Stable sticky cinematic story (desktop and mobile) =====
+   No GSAP pin spacer, no viewport-height gating, no dynamic-toolbar mode changes.
+   Scroll only advances chapter progress; the artwork stays anchored in one frame. */
+.story-runway { position:relative; --story-scroll-distance:11250px; }
+.story-runway.story-is-active {
+  height:calc(100svh - var(--mast-actual,var(--header)) + var(--story-scroll-distance));
+}
+.story-runway.story-is-active > .stage,
+.story-runway.story-is-active > .stage.is-cinematic {
+  position:sticky;
+  top:var(--mast-actual,var(--header));
+  height:calc(100svh - var(--mast-actual,var(--header)));
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.story-runway.story-is-active .spreads { flex:1; min-height:0; isolation:isolate; }
+.story-runway.story-is-active .spread { height:100%; min-height:0; overflow:hidden; }
+.story-runway.story-is-active .stage-foot { flex:none; }
+/* Put falling leaves only near the page margins, not across headlines or paintings. */
+.falling-leaf { opacity:0; }
+@keyframes rao-leaf-fall {
+  0% {transform:translate3d(0,-12svh,0) rotate(-12deg); opacity:0}
+  12% {opacity:.27}
+  85% {opacity:.25}
+  100% {transform:translate3d(var(--drift),120svh,0) rotate(var(--spin));opacity:0}
+}
+/* The bell and vine acquire an almost imperceptible sense of depth.
+   Unlike the former faux-parallax, their motion is timed, not tied to scroll. */
+.is-cinematic .spread:is(.current,.departing,.revealing) .story-layer--bell,
+.stage.story-fallback .story-layer--bell {
+  transform-origin:50% 3%;
+  animation:rao-bell-sway 6.8s ease-in-out infinite alternate;
+}
+.is-cinematic .spread:is(.current,.departing,.revealing) .story-layer--vine,
+.stage.story-fallback .story-layer--vine {
+  transform-origin:14% 5%;
+  animation:rao-vine-sway 9.6s ease-in-out infinite alternate;
+}
+@keyframes rao-bell-sway { 0%{transform:rotate(-1.5deg)} 100%{transform:rotate(1.5deg)} }
+@keyframes rao-vine-sway { 0%{transform:translate3d(0,1px,0) rotate(-.7deg)} 100%{transform:translate3d(2px,-2px,0) rotate(.7deg)} }
+/* Stop scroll-keyed displacement of individual accents from fighting keyframes. */
+.is-cinematic .spread:is(.current,.departing,.revealing) .story-layer--bell,
+.is-cinematic .spread:is(.current,.departing,.revealing) .story-layer--vine { will-change:transform; }
+
+/* Mobile chapters still transform in one position. Compact typography and art
+   inside a stable small-viewport-height frame instead of stacking into a long page. */
+@media (max-width:860px) {
+  .story-runway.story-is-active { --story-scroll-distance:7200px; }
+  .story-runway.story-is-active .spread,
+  .story-runway.story-is-active .spread--blessings,
+  .story-runway.story-is-active .spread--ceremonies,
+  .story-runway.story-is-active .spread--feast,
+  .story-runway.story-is-active .spread--closing {
+    padding:.36rem max(.75rem,var(--gutter));
+    gap:clamp(.22rem,.65svh,.55rem);
+    grid-template-rows:auto auto auto;
+    align-content:center;
+  }
+  .story-runway.story-is-active .spread--closing { grid-template-rows:auto auto auto; }
+  .story-runway.story-is-active .heading-block h1,
+  .story-runway.story-is-active .heading-block h2 {
+    font-size:clamp(2rem,min(9.3vw,5.6svh),3.45rem);
+    line-height:.93;
+  }
+  .story-runway.story-is-active .spread--welcome h2 { font-size:clamp(1.95rem,min(8.9vw,5.4svh),3.15rem); }
+  .story-runway.story-is-active .invocation { margin-bottom:.16rem; font-size:.66rem; line-height:1.35; }
+  .story-runway.story-is-active .invocation [lang=te] { font-size:1.08em; }
+  .story-runway.story-is-active .floral-rule { margin:0 auto .18rem; }
+  .story-runway.story-is-active .verse { font-size:clamp(.83rem,2.7vw,1rem); line-height:1.48; }
+  .story-runway.story-is-active .imprint,
+  .story-runway.story-is-active .source-line { margin-top:.25rem; }
+  .story-runway.story-is-active .source-line { font-size:1.04rem; }
+  .story-runway.story-is-active .plate--entrance,
+  .story-runway.story-is-active .plate--welcome,
+  .story-runway.story-is-active .plate--blessings { width:min(94vw,40svh,24rem); }
+  .story-runway.story-is-active .spread--ceremonies .plate--ceremonies { width:min(45vw,8.3rem);margin-top:.15rem; }
+  .story-runway.story-is-active .spread--ceremonies .events li {padding:.22rem 0;}
+  .story-runway.story-is-active .spread--ceremonies .events h3 {font-size:1.28rem;}
+  .story-runway.story-is-active .spread--ceremonies .events time {font-size:.76rem; margin:.08rem 0;}
+  .story-runway.story-is-active .spread--ceremonies .events p {font-size:.7rem; line-height:1.3;}
+  .story-runway.story-is-active .spread--ceremonies .schedule-inset {padding:.1rem;}
+  .story-runway.story-is-active .spread--feast .plate--feast {width:min(88vw,36svh,21rem); aspect-ratio:4/3; margin:0 auto .2rem;}
+  .story-runway.story-is-active .spread--feast .meal-inset>p {font-size:clamp(1.35rem,4.5vw,1.75rem)}
+  .story-runway.story-is-active .spread--feast .meal-inset time {font-size:.78rem;margin-top:.18rem;}
+  .story-runway.story-is-active .spread--closing .address-print { width:min(100%,min(36svh,19rem)); }
+  .story-runway.story-is-active .closing-inset .invitation-actions {font-size:.72rem;}
+  .story-runway.story-is-active .closing-inset :is(.action-row a,.calendars a) {min-height:32px;}
+  .falling-leaf:nth-child(n+7) { display:none; }
+}
+@media (max-width:700px) and (max-height:720px) {
+  .story-runway.story-is-active .spread,
+  .story-runway.story-is-active .spread--blessings,
+  .story-runway.story-is-active .spread--ceremonies,
+  .story-runway.story-is-active .spread--feast,
+  .story-runway.story-is-active .spread--closing {padding:.15rem .7rem;gap:.12rem;}
+  .story-runway.story-is-active .plate--entrance,
+  .story-runway.story-is-active .plate--welcome,
+  .story-runway.story-is-active .plate--blessings {width:min(82vw,34svh);}
+  .story-runway.story-is-active .spread--feast .plate--feast { width:min(83vw,29svh); }
+  .story-runway.story-is-active .heading-block h1,
+  .story-runway.story-is-active .heading-block h2 { font-size:clamp(1.75rem,min(8.8vw,5svh),2.8rem); }
+  .story-runway.story-is-active .verse { font-size:.81rem; line-height:1.38; }
+  .story-runway.story-is-active .floral-rule svg {height:.78rem;}
+  .story-runway.story-is-active .spread--ceremonies .plate--ceremonies {width:6.9rem;}
+  .story-runway.story-is-active .address-print {width:min(100%,17rem)}
+}
+@media (prefers-reduced-motion:reduce) {
+  .story-layer--bell,.story-layer--vine,.falling-leaf {animation:none!important;transform:none!important}
+  .story-runway:not(.story-is-active) {height:auto}
+}
+@media print { .story-runway,.story-runway.story-is-active {height:auto!important} }
+/* Make browser-autoplay fallback legible without obscuring page actions. */
+.music-error { width:max-content; max-width:min(250px,calc(100vw - 2rem)); padding:.4rem .65rem;
+  white-space:normal; background:#fff9ee; border:1px solid var(--rule); border-radius:.5rem;
+  box-shadow:0 5px 16px #47301f1e; }
+
+/* ================================================================
+   V6 — FULL-VIEWPORT CINEMATIC WATERCOLOR (targeted correction)
+   The veil is a sibling of .spreads and .stage-foot, and therefore
+   covers the ENTIRE pinned storytelling stage, not merely a painting.
+   It zooms and dissolves from scroll progress; artworks never move.
+   ================================================================ */
+.story-runway { --story-scroll-distance:6200px; }
+@media(max-width:860px) {
+  .story-runway.story-is-active { --story-scroll-distance:4400px; }
+}
+/* The incoming painting gently fades into the page as a whole rather than
+   being independently spotlight-masked, which previously looked patchy. */
+.is-cinematic .spread.revealing .plate,
+.is-cinematic .spread.revealing .plate--feast,
+.is-cinematic .spread.revealing .plate--ceremonies,
+.is-cinematic .spread.revealing .plate--blessings,
+.is-cinematic .spread.revealing .plate--closing {
+  -webkit-mask:none !important;
+  mask:none !important;
+  opacity:var(--incoming-art-opacity,0) !important;
+}
+.is-cinematic .spread.revealing {
+  -webkit-mask:none !important;
+  mask:none !important;
+  background:transparent !important;
+}
+/* The old image-only mask remains in the stylesheet for historical context,
+   but the rules above intentionally supersede it. The native paper edges
+   on each source illustration remain unchanged. */
+.is-cinematic .watercolor-veil:not([hidden]) {
+  position:absolute;
+  inset:0;
+  z-index:6;
+  display:block;
+  overflow:hidden;
+  pointer-events:none;
+  isolation:isolate;
+  opacity:var(--veil-opacity,0);
+  background:transparent;
+  mix-blend-mode:normal;
+  transform:none;
+  -webkit-mask:none;
+  mask:none;
+  contain:layout paint;
+}
+.watercolor-veil__pigment,
+.watercolor-veil__grain { position:absolute; display:block; inset:0; pointer-events:none; }
+.watercolor-veil__pigment {
+  inset:-15%;
+  background:
+    radial-gradient(ellipse 65% 65% at 52% 49%,#fff9eb 0%,#faefd8ee 41%,#e1b99790 67%,transparent 93%),
+    radial-gradient(ellipse 43% 52% at 14% 28%,#c5a775c9,transparent 78%),
+    radial-gradient(ellipse 48% 57% at 88% 76%,#e4b47ea8,transparent 83%),
+    url('../public/assets/paper-grain.png');
+  -webkit-mask-image:url('../public/assets/watercolor-mask.png');
+  mask-image:url('../public/assets/watercolor-mask.png');
+  -webkit-mask-size:100% 100%; mask-size:100% 100%;
+  -webkit-mask-position:center; mask-position:center;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  transform-origin:50% 53%;
+  transform:scale(var(--veil-scale,.78));
+  will-change:transform;
+}
+.watercolor-veil__grain {
+  background:linear-gradient(105deg,#f4e0c565,#f9f0e084 45%,#dec5a055),url('../public/assets/paper-grain.png');
+  mix-blend-mode:soft-light;
+  opacity:var(--veil-grain-opacity,0);
+}
+/* Keep paint and titles still in all six scenes, including the transition. */
+.is-cinematic .spread:is(.current,.departing,.revealing) .plate {
+  transform:none !important;
+  scale:1 !important;
+}
+@media(prefers-reduced-motion:reduce) {
+  .watercolor-veil { display:none !important; }
+}
+
+/* V8 — Reference-faithful painterly dissolve, across the WHOLE scene.
+   The same watercolor texture that previously revealed only the artwork now
+   reveals the complete incoming chapter. Never display a dark/scorched ring.
+   This block intentionally overrides earlier V4/V6/V7 transition rules. */
+.is-cinematic .spread.revealing {
+  background:var(--paper) var(--grain) !important;
+  -webkit-mask-image:url('../public/assets/watercolor-mask.png') !important;
+  mask-image:url('../public/assets/watercolor-mask.png') !important;
+  -webkit-mask-size:var(--watercolor-aperture-size,1px) var(--watercolor-aperture-size,1px) !important;
+  mask-size:var(--watercolor-aperture-size,1px) var(--watercolor-aperture-size,1px) !important;
+  -webkit-mask-position:50% 50% !important;
+  mask-position:50% 50% !important;
+  -webkit-mask-repeat:no-repeat !important;
+  mask-repeat:no-repeat !important;
+}
+.is-cinematic .spread.departing .plate { opacity:1 !important; }
+.is-cinematic .watercolor-veil:not([hidden]) {
+  display:block;
+  position:absolute;
+  inset:0;
+  z-index:6;
+  opacity:1;
+  background:none !important;
+  -webkit-mask:none !important;
+  mask:none !important;
+  mix-blend-mode:normal;
+  transform:none !important;
+  pointer-events:none;
+}
+.is-cinematic .watercolor-veil__pigment,
+.is-cinematic .watercolor-veil__grain { display:none }
+.chapter-portal__caption {
+  position:absolute;
+  inset:0 0 var(--foot) 0;
+  display:grid;
+  place-items:center;
+  pointer-events:none;
+  opacity:var(--glimpse-opacity,0);
+  transform:translateY(calc(var(--glimpse-lift,1) * 8px));
+}
+.chapter-portal__title {
+  display:block;
+  width:min(85%,42rem);
+  text-align:center;
+  font:500 clamp(2.2rem,5.1vw,5.3rem)/1.02 var(--display);
+  letter-spacing:-.035em;
+  color:var(--ink);
+  text-wrap:balance;
+  text-shadow:0 1px 0 #fff8ed,0 0 12px #fff6e9;
+}
+@media(max-width:860px) {
+  .chapter-portal__title {width:min(78%,23rem);font-size:clamp(1.85rem,7.5vw,3rem);}
+}
+@media(prefers-reduced-motion:reduce) {
+  .chapter-portal__caption { display:none!important }
+}
+</style>
+<style>body{margin:0}.story-runway{height:200vh}.stage.is-cinematic{position:sticky;top:66px;height:calc(100vh - 66px)}.stage.is-cinematic .spread{height:100%} .is-cinematic .spreads{min-height:0}.watercolor-veil[hidden]{display:none !important}</style></head><body>
+<header class="masthead" style="height:66px"><span class="family-mark">✾ The Rao's Family</span></header>
+<div class="story-runway story-is-active"><div class="stage is-cinematic"><div class="spreads">
+<section class="spread spread--entrance departing" style="z-index:1;--title-opacity:1;--text-opacity:1;--paint-depart-opacity:1"><div class="heading-block"><h1>Gruhapravesam <em>Mahotsavam</em></h1></div><div class="verse-block"><p class="verse">ముంగిట ముగ్గుల మురిపాలు…<br>గుమ్మాన తోరణాల సింగారాలు…</p></div><div class="plate plate--entrance"><div class="painting"><img src="../public/assets/entrance.webp" /></div></div></section>
+<section class="spread spread--welcome revealing" style="z-index:2;--title-opacity:0;--text-opacity:0;--incoming-art-opacity:1;--watercolor-aperture-size:1px"><div class="heading-block"><h2>Cordially Inviting <em>You &amp; Your Family</em></h2></div><div class="verse-block"><p class="verse">కొత్త గోడలు… కొత్త కలలు…<br>మీ రాకతో మొదలయ్యే మధుర జ్ఞాపకాలు!</p></div><div class="plate plate--welcome"><div class="painting"><img src="../public/assets/interior.webp" /></div></div></section>
+</div><div class="stage-foot"></div><div class="watercolor-veil" style="--glimpse-opacity:0;--glimpse-lift:1"><div class="chapter-portal__caption"><span class="chapter-portal__title">Cordially Inviting You &amp; Your Family</span></div></div></div></div>
+<script>
+const $=s=>document.querySelector(s), e=t=>{ t=Math.min(1,Math.max(0,t)); return t*t*(3-2*t); };
+function progress(b) {
+ let w=window.innerWidth,h=window.innerHeight-66, d=Math.hypot(w,h),size=1+3.3*d*e(b);
+ let incoming=$('.spread--welcome'), outgoing=$('.spread--entrance'), veil=$('.watercolor-veil');
+ incoming.style.setProperty('--watercolor-aperture-size',size+'px');
+ incoming.style.setProperty('--title-opacity',e((b-.79)/.19));incoming.style.setProperty('--text-opacity',e((b-.88)/.12));
+ outgoing.style.setProperty('--title-opacity',1-e(b/.2));outgoing.style.setProperty('--text-opacity',1-e(b/.26));
+ veil.style.setProperty('--glimpse-opacity',e((b-.23)/.16)*(1-e((b-.58)/.17)));
+ veil.style.setProperty('--glimpse-lift',1-e((b-.22)/.22));
+ }
+window.setProgress=progress;progress(0);
+</script></body></html>

@@ -1,0 +1,76 @@
+{
+  "schema": "rao-scene-registry-v1",
+  "source": "docs/CONTENT_LOCK.json",
+  "sceneCount": 6,
+  "scenes": [
+    {
+      "id": "entrance",
+      "eyebrow": "The Sacred Threshold",
+      "teluguKey": "entrance",
+      "assetWebp": "assets/entrance.webp",
+      "assetFallback": "assets/entrance_master.png",
+      "artStatus": "user-approved-immutable",
+      "hasOriginalTransparentLayers": false,
+      "narrative": "Door 201 and decorated muggu welcome the guest. No door movement.",
+      "transitionOut": "watercolor-bloom"
+    },
+    {
+      "id": "welcome",
+      "eyebrow": "Welcome Home",
+      "teluguKey": "welcome",
+      "assetWebp": "assets/interior.webp",
+      "assetFallback": "assets/interior_master.png",
+      "artStatus": "user-approved-immutable",
+      "hasOriginalTransparentLayers": false,
+      "narrative": "Warm symbolic interior; crop away the original open door and second muggu.",
+      "transitionOut": "warm-paper-wash"
+    },
+    {
+      "id": "blessings",
+      "eyebrow": "Divine Blessings",
+      "teluguKey": "blessings",
+      "assetWebp": "assets/blessings.webp",
+      "assetFallback": "assets/blessings_master.png",
+      "artStatus": "new-candidate-not-previously-approved",
+      "hasOriginalTransparentLayers": false,
+      "narrative": "Sri Venkateswara and our elders; keep deity completely still.",
+      "transitionOut": "sandalwood-mist"
+    },
+    {
+      "id": "ceremonies",
+      "eyebrow": "Auspicious Ceremonies",
+      "teluguKey": "ceremonies",
+      "assetWebp": "assets/ceremonies.webp",
+      "artStatus": "new-painterly-upgrade",
+      "hasOriginalTransparentLayers": false,
+      "narrative": "Rich Kalamkari watercolor kalash, homam, deepams, flowers and muggu; ceremonial scene with live text to right.",
+      "transitionOut": "paint-brush",
+      "editableVectorSource": false,
+      "assetFallback": "assets/ceremonies_painterly_master.png"
+    },
+    {
+      "id": "feast",
+      "eyebrow": "Vindu Bhojanam",
+      "teluguKey": "lunch",
+      "assetWebp": "assets/feast.webp",
+      "artStatus": "supplied-full-banquet-candidate",
+      "hasOriginalTransparentLayers": false,
+      "narrative": "Complete 4:3 banquet illustration with lamps, peacocks and a banana-leaf meal beside the live Telugu invitation.",
+      "transitionOut": "watercolor-bloom",
+      "editableVectorSource": false,
+      "assetFallback": "assets/feast_painterly_master.png"
+    },
+    {
+      "id": "closing",
+      "eyebrow": "Our New Abode",
+      "teluguKey": "closing",
+      "assetWebp": "assets/closing.webp",
+      "artStatus": "new-painterly-decorative-frame",
+      "hasOriginalTransparentLayers": false,
+      "narrative": "Parchment with detailed floral watercolor corners and live venue content. No fabricated building imagery.",
+      "transitionOut": null,
+      "editableVectorSource": false,
+      "assetFallback": "assets/closing_painterly_master.png"
+    }
+  ]
+}

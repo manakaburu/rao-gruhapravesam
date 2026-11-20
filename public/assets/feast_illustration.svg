@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" role="img" aria-label="Illustrated Telugu festive vegetarian banana leaf feast with rice sweets and flower garlands">
+<defs>
+ <radialGradient id="paper"><stop stop-color="#fff3dc"/><stop offset="1" stop-color="#e7c6a0"/></radialGradient>
+ <radialGradient id="gold"><stop stop-color="#fee8a4"/><stop offset=".48" stop-color="#d79a35"/><stop offset="1" stop-color="#8d4c1f"/></radialGradient>
+ <linearGradient id="red"><stop stop-color="#c86241"/><stop offset="1" stop-color="#702b2b"/></linearGradient>
+ <radialGradient id="leaf"><stop stop-color="#92a068"/><stop offset="1" stop-color="#3e5a3b"/></radialGradient>
+ <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".055" numOctaves="2" seed="19" stitchTiles="stitch" result="n"/><feColorMatrix in="n" type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".12"/></feComponentTransfer></filter>
+ <g id="flower"><path d="M0 -24 C-19 -38 -19 -12 -8 -4 C-33 -14 -30 12 -8 8 C-14 31 9 28 8 8 C32 17 37 -8 10 -5 C18 -29 2 -34 0 -24" fill="#bc513d" stroke="#793b32" stroke-width="2.3"/><circle r="9" fill="#e3ab43" stroke="#f6e1a5" stroke-width="2"/></g>
+ <g id="leaflet"><path d="M0 0 Q-24 -38 7 -70 Q40 -32 0 0" fill="url(#leaf)" stroke="#354d37" stroke-width="3"/><path d="M0 -2 Q10 -38 7 -68" stroke="#d9d59a" stroke-width="2" fill="none"/></g>
+ <g id="diya"><ellipse cx="0" cy="9" rx="53" ry="14" fill="#84421e"/><path d="M-53 0 Q0 55 53 0 Z" fill="url(#gold)" stroke="#8f4e25" stroke-width="3"/><path d="M0 -2 Q-19 -40 0 -70 Q22 -38 0 -2Z" fill="#f6af39" stroke="#fff2ac" stroke-width="5"/><path d="M0 -8 Q-8 -23 0 -40 Q8 -24 0 -8Z" fill="#fff0b8"/></g>
+</defs>
+<rect width="1448" height="1086" fill="url(#paper)"/>
+<g fill="none" stroke="#863f31" opacity=".75"><rect x="24" y="24" width="1400" height="1038" rx="44" stroke-width="4"/><rect x="48" y="48" width="1352" height="990" rx="32" stroke="#b99558" stroke-width="2"/></g>
+<g opacity=".83"><path d="M0 0 Q160 130 330 20" stroke="#627747" stroke-width="16" fill="none"/><path d="M1448 0 Q1300 130 1118 20" stroke="#627747" stroke-width="16" fill="none"/>
+<use href="#leaflet" transform="translate(90 20) rotate(70) scale(.40)"/><use href="#leaflet" transform="translate(1358 20) rotate(-70) scale(.40)"/><use href="#leaflet" transform="translate(154 35) rotate(62) scale(.40)"/><use href="#leaflet" transform="translate(1294 35) rotate(-62) scale(.40)"/><use href="#leaflet" transform="translate(218 20) rotate(54) scale(.40)"/><use href="#leaflet" transform="translate(1230 20) rotate(-54) scale(.40)"/><use href="#leaflet" transform="translate(282 35) rotate(46) scale(.40)"/><use href="#leaflet" transform="translate(1166 35) rotate(-46) scale(.40)"/><use href="#leaflet" transform="translate(346 20) rotate(38) scale(.40)"/><use href="#leaflet" transform="translate(1102 20) rotate(-38) scale(.40)"/><use href="#leaflet" transform="translate(410 35) rotate(30) scale(.40)"/><use href="#leaflet" transform="translate(1038 35) rotate(-30) scale(.40)"/><use href="#leaflet" transform="translate(474 20) rotate(22) scale(.40)"/><use href="#leaflet" transform="translate(974 20) rotate(-22) scale(.40)"/><use href="#leaflet" transform="translate(538 35) rotate(14) scale(.40)"/><use href="#leaflet" transform="translate(910 35) rotate(-14) scale(.40)"/><use href="#flower" transform="translate(118 90) scale(0.75)"/><use href="#flower" transform="translate(232 65) scale(0.55)"/><use href="#flower" transform="translate(1330 90) scale(0.75)"/><use href="#flower" transform="translate(1215 65) scale(0.55)"/><use href="#flower" transform="translate(88 960) scale(0.6)"/><use href="#flower" transform="translate(1360 960) scale(0.6)"/><use href="#flower" transform="translate(250 995) scale(0.35)"/><use href="#flower" transform="translate(1198 995) scale(0.35)"/></g><g transform="translate(724 645)">
+<ellipse cy="260" rx="550" ry="65" fill="#b9936c" opacity=".23"/>
+<path d="M-510 -100 Q-255 -320 245 -220 Q490 -180 530 25 Q450 260 10 245 Q-350 230 -510 -100Z" fill="url(#leaf)" stroke="#3f673e" stroke-width="12"/>
+<path d="M-510 -100 Q10 60 520 35" stroke="#a1b97e" stroke-width="12" fill="none"/>
+<g stroke="#c8d4a1" stroke-width="4" opacity=".45"><path d="M-400 -144 Q-355 10 -310 150" fill="none"/><path d="M-320 -139 Q-275 10 -230 150" fill="none"/><path d="M-240 -134 Q-195 10 -150 150" fill="none"/><path d="M-160 -129 Q-115 10 -70 150" fill="none"/><path d="M-80 -125 Q-35 10 10 150" fill="none"/><path d="M0 -120 Q45 10 90 150" fill="none"/><path d="M80 -115 Q125 10 170 150" fill="none"/><path d="M160 -111 Q205 10 250 150" fill="none"/><path d="M240 -106 Q285 10 330 150" fill="none"/><path d="M320 -101 Q365 10 410 150" fill="none"/><path d="M400 -96 Q445 10 490 150" fill="none"/></g>
+<!-- rice mound -->
+<ellipse cx="0" cy="52" rx="135" ry="90" fill="#faf1d9" stroke="#d0c2a4" stroke-width="8"/>
+<path d="M-115 54 Q0 -82 120 56" fill="none" stroke="#fffdf3" stroke-width="26" opacity=".7"/>
+<circle cx="0" cy="-12" r="17" fill="#d89d41"/>
+<!-- bowls with distinct traditional side dishes -->
+<g stroke="#79451f" stroke-width="9" fill="url(#gold)">
+ <ellipse cx="-270" cy="-50" rx="78" ry="55"/><ellipse cx="-85" cy="-128" rx="64" ry="47"/><ellipse cx="145" cy="-132" rx="64" ry="47"/><ellipse cx="322" cy="-48" rx="80" ry="54"/>
+</g>
+<g stroke="#fff0b8" stroke-width="3">
+ <ellipse cx="-270" cy="-56" rx="62" ry="41" fill="#b56627"/>
+ <ellipse cx="-85" cy="-131" rx="51" ry="35" fill="#5e7937"/>
+ <ellipse cx="145" cy="-135" rx="52" ry="34" fill="#d7a345"/>
+ <ellipse cx="322" cy="-54" rx="65" ry="42" fill="#9a4735"/>
+</g>
+<g fill="#d7bd78"><circle cx="-291" cy="-62" r="9"/><circle cx="-249" cy="-48" r="10"/><circle cx="-278" cy="-30" r="7"/></g>
+<g fill="#dae6b0"><circle cx="-90" cy="-130" r="9"/><circle cx="-60" cy="-142" r="8"/><circle cx="-116" cy="-121" r="7"/></g>
+<g fill="#eac67d"><circle cx="147" cy="-147" r="8"/><circle cx="127" cy="-120" r="9"/><circle cx="170" cy="-121" r="8"/></g>
+<!-- festive sweets, fry breads and papad -->
+<g fill="#c77636" stroke="#934a25" stroke-width="5"><ellipse cx="-280" cy="130" rx="66" ry="34"/><ellipse cx="-160" cy="150" rx="55" ry="31"/><ellipse cx="285" cy="140" rx="65" ry="35"/></g>
+<g fill="none" stroke="#efbe68" stroke-width="7"><ellipse cx="-281" cy="130" rx="28" ry="14"/><ellipse cx="-160" cy="150" rx="26" ry="12"/><ellipse cx="285" cy="140" rx="32" ry="14"/></g>
+<ellipse cx="160" cy="130" rx="66" ry="49" fill="#ead5a0" stroke="#b78b51" stroke-width="7"/><path d="M120 116 Q156 88 201 142 M134 160 Q162 143 191 112" fill="none" stroke="#fff2c2" stroke-width="8"/>
+</g>
+<use href="#diya" transform="translate(180 856) scale(.9)"/><use href="#diya" transform="translate(1270 856) scale(.9)"/>
+<rect width="1448" height="1086" fill="#5f3425" opacity=".095" filter="url(#rough)"/></svg>

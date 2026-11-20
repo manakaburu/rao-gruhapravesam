@@ -1,0 +1,98 @@
+{
+  "authority": "reference/original_index.html; normalized with one known WhatsApp wording correction",
+  "pageTitle": "Gruhapravesam Mahotsavam | The Rao's Family",
+  "familyDisplay": "The Rao's Family",
+  "hosts": [
+    "Sri Sana Rambabu",
+    "Smt. Bhavani"
+  ],
+  "invocation": "శ్రీ గణేశాయ నమః • Om Sri Ganeshaya Namaha",
+  "blessings": "Lord Venkateswara and beloved elders",
+  "timezone": "Asia/Kolkata",
+  "events": [
+    {
+      "title": "Gruhapravesam",
+      "localDate": "2026-11-25",
+      "localTime": "20:48",
+      "display": "Wednesday, November 25, 2026 · 8:48 PM",
+      "rituals": [
+        "Go-Puja",
+        "Dwarapalaka Puja",
+        "పాలు పొంగించడం (Palu Ponginchadam — Auspicious Milk-Boiling Ceremony)"
+      ]
+    },
+    {
+      "title": "Satyanarayana Vratham",
+      "localDate": "2026-11-26",
+      "localTime": "08:30",
+      "display": "Thursday, November 26, 2026 · 8:30 AM onwards",
+      "rituals": [
+        "Sacred Homam",
+        "Satyanarayana Vratham",
+        "Prasadam"
+      ]
+    },
+    {
+      "title": "Vindu Bhojanam",
+      "localDate": "2026-11-26",
+      "localTime": "12:30",
+      "display": "Thursday, November 26, 2026 · 12:30 PM",
+      "description": "Traditional Festive Lunch"
+    }
+  ],
+  "venue": {
+    "name": "Tranquility by Whitefield Constructions",
+    "flat": "Flat No: 201",
+    "street": "Sangeet Nagar, Somajiguda",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "postalCode": "500082",
+    "country": "India",
+    "landmark": "Near AIG",
+    "mapUrlFromSource": "https://share.google/dlSo9GjESEiv0rtJj",
+    "mapUrlVerified": false
+  },
+  "contactPhone": "+91 9666571316",
+  "editorialDraftsNotSourceFacts": {
+    "entrance": [
+      "ముంగిట ముగ్గుల మురిపాలు…",
+      "గుమ్మాన తోరణాల సింగారాలు…",
+      "మా ఇంటికి మీ రాకే అసలైన సంబరాలు!"
+    ],
+    "welcome": [
+      "కొత్త గోడలు… కొత్త కలలు…",
+      "మీ రాకతో మొదలయ్యే మధుర జ్ఞాపకాలు!"
+    ],
+    "blessings": [
+      "ఏడు కొండలవాడి ఆశీస్సులతో…",
+      "మా కొత్త ఇంట శుభానికి శ్రీకారం…",
+      "మీ అందరి దీవెనలతో ఆనందాల హారం!"
+    ],
+    "ceremonies": [
+      "మంత్రాల నడుమ మంగళ ఘడియలు…",
+      "ఆత్మీయుల నడుమ ఆనంద క్షణాలు…",
+      "మీ రాకతో మరింత మధురమైన వేడుకలు!"
+    ],
+    "lunch": [
+      "పూజల శుభవేళలో మీ రాక మాకు ఆనందం…",
+      "విందు భోజనంతో మీతో గడపడం మాకు మరింత సంతోషం…",
+      "ఆప్యాయంగా వచ్చి, ఆనందంగా భోజనం చేసి ఆశీర్వదించండి!"
+    ],
+    "closing": [
+      "ఇల్లు మాది… ఆనందం మనందరిదీ…",
+      "గుమ్మం మాది… స్వాగతం మీ అందరికీ…",
+      "మీ రాకతోనే మా వేడుకకు నిండుదనం!"
+    ]
+  },
+  "exclusions": [
+    "RSVP",
+    "guestbook",
+    "door-opening animation",
+    "background autoplay and unlicensed audio hosting"
+  ],
+  "sourceCorrection": "Original WhatsApp share snippet wrongly describes 2026-11-26 08:30 as Muhurtham. Gruhapravesam is 2026-11-25 20:48; Vratham is 2026-11-26 08:30.",
+  "editorialCorrection": {
+    "ritual": "The family approved the Telugu ceremony name పాలు పొంగించడం and its English gloss in the first event.",
+    "feast": "Family editorial replacement approved by direction: inviting, affectionate and food-positive; replaces Come for puja, come hungry."
+  }
+}

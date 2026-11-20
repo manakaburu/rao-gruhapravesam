@@ -1,0 +1,7 @@
+RAO FAMILY GRUHAPRAVESAM — ONE CODEX PROMPT
+
+Open this folder (the directory with package.json) in Codex and paste:
+
+Read the root AGENTS.md and CODEX_MASTER_PROMPT.md completely. Treat the latter as the executable master instruction and read every file it requires, including FINAL_IMPLEMENTATION_BLUEPRINT.md and docs/CONTENT_LOCK.json. Continue the existing project and implement ALL SIX scenes, complete all seven internal phases, self-review the actual browser experience, run checks/build, deliver screenshots/evidence, and do not stop to ask for another phase prompt. Do not invent artwork or facts; document the existing candidate-art limitations. Start coding now.
+
+The full detailed master prompt is CODEX_MASTER_PROMPT.md; only use that and the included documents, not older Phase-1-only instructions.

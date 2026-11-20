@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Rao Family//Gruhapravesam Invitation//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:vindu-bhojanam-2026@rao-family-invitation
+DTSTAMP:20261118T000000Z
+DTSTART:20261126T070000Z
+SUMMARY:Vindu Bhojanam
+DESCRIPTION:Traditional festive lunch.
+LOCATION:Tranquility by Whitefield Constructions\, Flat No: 201\, Sangeet N
+ agar\, Somajiguda\, Hyderabad\, Telangana 500082\, India
+END:VEVENT
+END:VCALENDAR

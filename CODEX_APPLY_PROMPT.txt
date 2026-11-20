@@ -1,0 +1,10 @@
+Continue the existing Rao Family Gruhapravesam website. I am attaching the verified V3 pacing-and-sizing source ZIP based on your latest `outputs.zip` project. This is a precise code patch, not a redesign.
+
+1. Extract the ZIP and read `docs/CODEX_STORY_PACING_V3.md` and `AGENTS.md` fully.
+2. Compare with the running source in the existing workspace. Merge the V3 changes to `src/data/chapters.ts`, `src/components/CinematicStage.tsx`, `src/styles/invitation.css`, `docs/MOTION_SPEC.md`, `package.json`, and the added `scripts/check-story-pacing.mjs`. `dist/` and dependencies are intentionally omitted; generate them locally with npm. Preserve other newer unrelated work.
+3. Keep the five watercolor transitions scroll-controlled and longer (roughly 1,000–1,200 physical scroll pixels each on desktop); retain reversible motion, coherent incoming masks and soft fade of the departing painting. Do not replace with automatic timed slideshow or ordinary vertical scrolling.
+4. Keep the desktop artwork larger but prevent the ceremony scene from overflowing the pinned stage. Preserve the whole Vindu Bhojanam image, all six scenes, original artwork, and every event detail.
+5. Run `npm ci`, `npm run check` and `npm run build`; fix any errors. Browser test at 1714x900, 1440x900, 1366x768, 390x844, 375x667 plus reduced-motion. Confirm pinned story at the first four, accessible normal-reading fallback on short-height mobile. Verify five middle-transition screenshots and a forward/reverse recording; ensure no clipping, overflow, or premature chapter switching.
+6. Provide the updated running URL, production build and QA evidence. Do not introduce RSVP, music, new illustrations, or door-swing animation.
+
+Implement this patch in the current project, do not restart or brainstorm an alternate design.

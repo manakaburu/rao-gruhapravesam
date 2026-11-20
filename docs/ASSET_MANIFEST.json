@@ -1,0 +1,155 @@
+{
+  "approved_immutable": [
+    {
+      "path": "public/assets/entrance.webp",
+      "bytes": 559956,
+      "sha256": "147572d6e5a9af78f3fb6676f66f013177a5bf4ff9cc6336748aee099a099eb1",
+      "approval": "user-approved",
+      "usage": "approved_immutable"
+    },
+    {
+      "path": "public/assets/entrance_master.png",
+      "bytes": 3832419,
+      "sha256": "a675950c31cea517e1c514c9a46a0425af2e0e076fdc8f583c30913dd67cd943",
+      "approval": "user-approved",
+      "usage": "approved_immutable"
+    },
+    {
+      "path": "public/assets/interior.webp",
+      "bytes": 507220,
+      "sha256": "ff05696e2ef7ab52d774d5d56a9ad5e27fb673045c14feb2c63483620214703d",
+      "approval": "user-approved",
+      "usage": "approved_immutable"
+    },
+    {
+      "path": "public/assets/interior_master.png",
+      "bytes": 3524352,
+      "sha256": "25d84da7dbd9192970d1c3383a31c67d6dcb69d22099092a43da2c1340433ee1",
+      "approval": "user-approved",
+      "usage": "approved_immutable"
+    }
+  ],
+  "new_candidate": [
+    {
+      "path": "public/assets/blessings.webp",
+      "bytes": 660868,
+      "sha256": "5675724481fc8f28430416917ca0c15a2c81d8cb1a681716dfd48c66ae529ebf",
+      "approval": "candidate-not-yet-user-approved",
+      "usage": "new_candidate"
+    },
+    {
+      "path": "public/assets/blessings_master.png",
+      "bytes": 4064270,
+      "sha256": "f49e4ea50dab23c6f8969520d42e5dc7eac6e04745fa078be98fd87428c49910",
+      "approval": "candidate-not-yet-user-approved",
+      "usage": "new_candidate"
+    },
+    {
+      "path": "public/assets/feast_painterly_master.png",
+      "bytes": 3335373,
+      "sha256": "e1d184fd30f5df0274d7d80eee1efee51fdfe3ee97b7bd8882210a18b784adfd",
+      "approval": "new-user-requested-replacement; awaiting on-device visual sign-off",
+      "usage": "complete-banquet-original-master"
+    }
+  ],
+  "symbolic_supporting": [
+    {
+      "path": "public/assets/ceremonies.webp",
+      "bytes": 506468,
+      "sha256": "549625fdad3372400cb1255a5924688323f5844aaf161071660b16929aa74176",
+      "approval": "new-candidate",
+      "usage": "painterly-replacement"
+    },
+    {
+      "path": "public/assets/ceremonies_illustration.svg",
+      "bytes": 8140,
+      "sha256": "ea22b2da31a0413f02b632495157cab5ef0597a874990f37215a64d21b44a35f",
+      "approval": "supplementary",
+      "usage": "symbolic_supporting"
+    },
+    {
+      "path": "public/assets/closing.webp",
+      "bytes": 170580,
+      "sha256": "cdbce786cccbe9a300085a7677f9c71e9b93d2d7a39e6278cd9a0d4ef5f0c51a",
+      "approval": "new-candidate",
+      "usage": "painterly-replacement"
+    },
+    {
+      "path": "public/assets/closing_illustration.svg",
+      "bytes": 8281,
+      "sha256": "0c8077224dc6b3fd7972953d55ddbab9ae0f0f4cfe816c96d272406717c09fa2",
+      "approval": "supplementary",
+      "usage": "symbolic_supporting"
+    },
+    {
+      "path": "public/assets/feast.webp",
+      "bytes": 593878,
+      "sha256": "52c159ff96a480f531aee90dd8b6b8d73187713374084791447e49f3b64f4129",
+      "approval": "new-user-requested-replacement; awaiting on-device visual sign-off",
+      "usage": "full-composition-watercolor-uncropped"
+    },
+    {
+      "path": "public/assets/feast_illustration.svg",
+      "bytes": 6871,
+      "sha256": "79f7f53a3ad8d9f7a452d6964f96a6bea51a4f50de16d03b7687ca210158c525",
+      "approval": "supplementary",
+      "usage": "symbolic_supporting"
+    }
+  ],
+  "derived_overlays": [
+    {
+      "path": "public/assets/foliage_left.png",
+      "bytes": 308776,
+      "sha256": "11a11bc0c73b763d320e8b81b3c66d2a036f965c155256c83de1bfe0b07ddb3b",
+      "approval": "supplementary",
+      "usage": "derived_overlays"
+    },
+    {
+      "path": "public/assets/foliage_right.png",
+      "bytes": 311865,
+      "sha256": "714b0990c34ad727bf663155020d91ed68e91f824b5824db8aa209ab328f36c9",
+      "approval": "supplementary",
+      "usage": "derived_overlays"
+    }
+  ],
+  "procedural_and_metadata": [
+    {
+      "path": "public/assets/paper-grain.png",
+      "bytes": 19378,
+      "sha256": "7b976396b98973cb0a2c29a4cf585ed20466f000063260fd410500067b3a96b9",
+      "approval": "supplementary",
+      "usage": "procedural_and_metadata"
+    },
+    {
+      "path": "public/assets/social-preview.jpg",
+      "bytes": 248815,
+      "sha256": "9436fdd9167746471cac08450c1b55f747ee32f9479aef09402b4ce5d7bc6924",
+      "approval": "supplementary",
+      "usage": "procedural_and_metadata"
+    },
+    {
+      "path": "public/assets/watercolor-mask.png",
+      "bytes": 49192,
+      "sha256": "ac60455be57a54d8d10df92334cf5c9d69a22f34696e1690a5b7c99837ea3ee9",
+      "approval": "supplementary",
+      "usage": "procedural_and_metadata"
+    }
+  ],
+  "painterly_v2_assets": [
+    {
+      "path": "public/assets/ceremonies_painterly_master.png",
+      "sha256": "eb52e6a08e9255c81af581b2047b9aac765c9b092d32dcf2907e54e3ac5d230e",
+      "approval": "candidate-needs-visual-review"
+    },
+    {
+      "path": "public/assets/feast_original_before_uncrop.png",
+      "sha256": "d80b9e2ebbf39d8f32a466ce33d056930e2f4eca71280b1ee1d0c0c8388efa9d",
+      "approval": "historical comparison only"
+    },
+    {
+      "path": "public/assets/closing_painterly_master.png",
+      "sha256": "aba24f85b1e0958b430d03d69b44ec6e7038f3359c4515ea62de11bc5603053b",
+      "approval": "candidate-needs-visual-review"
+    }
+  ]
+}

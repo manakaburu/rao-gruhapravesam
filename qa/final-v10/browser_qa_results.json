@@ -1,0 +1,506 @@
+[
+  {
+    "viewport": "1440x900",
+    "target": "feast",
+    "blend": 0.18,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1440x900",
+    "target": "feast",
+    "blend": 0.35,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1440x900",
+    "target": "feast",
+    "blend": 0.53,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1440x900",
+    "target": "feast",
+    "blend": 0.71,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1440x900",
+    "target": "feast",
+    "blend": 0.88,
+    "widthOverflow": 0,
+    "headVisible": "0.460563"
+  },
+  {
+    "viewport": "1440x900",
+    "target": "feast",
+    "blend": 1.0,
+    "widthOverflow": 0,
+    "headVisible": "1"
+  },
+  {
+    "viewport": "1440x900",
+    "target": "closing",
+    "blend": 0.18,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1440x900",
+    "target": "closing",
+    "blend": 0.35,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1440x900",
+    "target": "closing",
+    "blend": 0.53,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1440x900",
+    "target": "closing",
+    "blend": 0.71,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1440x900",
+    "target": "closing",
+    "blend": 0.88,
+    "widthOverflow": 0,
+    "headVisible": "0.460563"
+  },
+  {
+    "viewport": "1440x900",
+    "target": "closing",
+    "blend": 1.0,
+    "widthOverflow": 0,
+    "headVisible": "1"
+  },
+  {
+    "viewport": "390x844",
+    "target": "feast",
+    "blend": 0.18,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "390x844",
+    "target": "feast",
+    "blend": 0.35,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "390x844",
+    "target": "feast",
+    "blend": 0.53,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "390x844",
+    "target": "feast",
+    "blend": 0.71,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "390x844",
+    "target": "feast",
+    "blend": 0.88,
+    "widthOverflow": 0,
+    "headVisible": "0.460563"
+  },
+  {
+    "viewport": "390x844",
+    "target": "feast",
+    "blend": 1.0,
+    "widthOverflow": 0,
+    "headVisible": "1"
+  },
+  {
+    "viewport": "390x844",
+    "target": "closing",
+    "blend": 0.18,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "390x844",
+    "target": "closing",
+    "blend": 0.35,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "390x844",
+    "target": "closing",
+    "blend": 0.53,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "390x844",
+    "target": "closing",
+    "blend": 0.71,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "390x844",
+    "target": "closing",
+    "blend": 0.88,
+    "widthOverflow": 0,
+    "headVisible": "0.460563"
+  },
+  {
+    "viewport": "390x844",
+    "target": "closing",
+    "blend": 1.0,
+    "widthOverflow": 0,
+    "headVisible": "1"
+  },
+  {
+    "viewport": "375x667",
+    "target": "feast",
+    "blend": 0.18,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "375x667",
+    "target": "feast",
+    "blend": 0.35,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "375x667",
+    "target": "feast",
+    "blend": 0.53,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "375x667",
+    "target": "feast",
+    "blend": 0.71,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "375x667",
+    "target": "feast",
+    "blend": 0.88,
+    "widthOverflow": 0,
+    "headVisible": "0.460563"
+  },
+  {
+    "viewport": "375x667",
+    "target": "feast",
+    "blend": 1.0,
+    "widthOverflow": 0,
+    "headVisible": "1"
+  },
+  {
+    "viewport": "375x667",
+    "target": "closing",
+    "blend": 0.18,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "375x667",
+    "target": "closing",
+    "blend": 0.35,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "375x667",
+    "target": "closing",
+    "blend": 0.53,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "375x667",
+    "target": "closing",
+    "blend": 0.71,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "375x667",
+    "target": "closing",
+    "blend": 0.88,
+    "widthOverflow": 0,
+    "headVisible": "0.460563"
+  },
+  {
+    "viewport": "375x667",
+    "target": "closing",
+    "blend": 1.0,
+    "widthOverflow": 0,
+    "headVisible": "1"
+  },
+  {
+    "viewport": "1714x900",
+    "target": "feast",
+    "blend": 0.18,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1714x900",
+    "target": "feast",
+    "blend": 0.35,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1714x900",
+    "target": "feast",
+    "blend": 0.53,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1714x900",
+    "target": "feast",
+    "blend": 0.71,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1714x900",
+    "target": "feast",
+    "blend": 0.88,
+    "widthOverflow": 0,
+    "headVisible": "0.460563"
+  },
+  {
+    "viewport": "1714x900",
+    "target": "feast",
+    "blend": 1.0,
+    "widthOverflow": 0,
+    "headVisible": "1"
+  },
+  {
+    "viewport": "1714x900",
+    "target": "closing",
+    "blend": 0.18,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1714x900",
+    "target": "closing",
+    "blend": 0.35,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1714x900",
+    "target": "closing",
+    "blend": 0.53,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1714x900",
+    "target": "closing",
+    "blend": 0.71,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1714x900",
+    "target": "closing",
+    "blend": 0.88,
+    "widthOverflow": 0,
+    "headVisible": "0.460563"
+  },
+  {
+    "viewport": "1714x900",
+    "target": "closing",
+    "blend": 1.0,
+    "widthOverflow": 0,
+    "headVisible": "1"
+  },
+  {
+    "viewport": "1366x768",
+    "target": "feast",
+    "blend": 0.18,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1366x768",
+    "target": "feast",
+    "blend": 0.35,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1366x768",
+    "target": "feast",
+    "blend": 0.53,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1366x768",
+    "target": "feast",
+    "blend": 0.71,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1366x768",
+    "target": "feast",
+    "blend": 0.88,
+    "widthOverflow": 0,
+    "headVisible": "0.460563"
+  },
+  {
+    "viewport": "1366x768",
+    "target": "feast",
+    "blend": 1.0,
+    "widthOverflow": 0,
+    "headVisible": "1"
+  },
+  {
+    "viewport": "1366x768",
+    "target": "closing",
+    "blend": 0.18,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1366x768",
+    "target": "closing",
+    "blend": 0.35,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1366x768",
+    "target": "closing",
+    "blend": 0.53,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1366x768",
+    "target": "closing",
+    "blend": 0.71,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "1366x768",
+    "target": "closing",
+    "blend": 0.88,
+    "widthOverflow": 0,
+    "headVisible": "0.460563"
+  },
+  {
+    "viewport": "1366x768",
+    "target": "closing",
+    "blend": 1.0,
+    "widthOverflow": 0,
+    "headVisible": "1"
+  },
+  {
+    "viewport": "320x568",
+    "target": "feast",
+    "blend": 0.18,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "320x568",
+    "target": "feast",
+    "blend": 0.35,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "320x568",
+    "target": "feast",
+    "blend": 0.53,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "320x568",
+    "target": "feast",
+    "blend": 0.71,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "320x568",
+    "target": "feast",
+    "blend": 0.88,
+    "widthOverflow": 0,
+    "headVisible": "0.460563"
+  },
+  {
+    "viewport": "320x568",
+    "target": "feast",
+    "blend": 1.0,
+    "widthOverflow": 0,
+    "headVisible": "1"
+  },
+  {
+    "viewport": "320x568",
+    "target": "closing",
+    "blend": 0.18,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "320x568",
+    "target": "closing",
+    "blend": 0.35,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "320x568",
+    "target": "closing",
+    "blend": 0.53,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "320x568",
+    "target": "closing",
+    "blend": 0.71,
+    "widthOverflow": 0,
+    "headVisible": "0"
+  },
+  {
+    "viewport": "320x568",
+    "target": "closing",
+    "blend": 0.88,
+    "widthOverflow": 0,
+    "headVisible": "0.460563"
+  },
+  {
+    "viewport": "320x568",
+    "target": "closing",
+    "blend": 1.0,
+    "widthOverflow": 0,
+    "headVisible": "1"
+  }
+]

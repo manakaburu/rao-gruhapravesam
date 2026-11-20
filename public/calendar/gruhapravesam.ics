@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Rao Family//Gruhapravesam Invitation//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:gruhapravesam-2026@rao-family-invitation
+DTSTAMP:20261118T000000Z
+DTSTART:20261125T151800Z
+SUMMARY:Gruhapravesam
+DESCRIPTION:Go-Puja\, Dwarapalaka Puja\, పాలు పొంగించ
+ డం (Palu Ponginchadam — Auspicious Milk-Boiling Ceremony)
+LOCATION:Tranquility by Whitefield Constructions\, Flat No: 201\, Sangeet N
+ agar\, Somajiguda\, Hyderabad\, Telangana 500082\, India
+END:VEVENT
+END:VCALENDAR

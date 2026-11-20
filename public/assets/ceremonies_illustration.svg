@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" role="img" aria-label="Illustrated traditional kalash, sacred homam fire, brass diyas and florals for ceremonies">
+<defs>
+ <radialGradient id="paper"><stop stop-color="#fff3dc"/><stop offset="1" stop-color="#e7c6a0"/></radialGradient>
+ <radialGradient id="gold"><stop stop-color="#fee8a4"/><stop offset=".48" stop-color="#d79a35"/><stop offset="1" stop-color="#8d4c1f"/></radialGradient>
+ <linearGradient id="red"><stop stop-color="#c86241"/><stop offset="1" stop-color="#702b2b"/></linearGradient>
+ <radialGradient id="leaf"><stop stop-color="#92a068"/><stop offset="1" stop-color="#3e5a3b"/></radialGradient>
+ <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".055" numOctaves="2" seed="19" stitchTiles="stitch" result="n"/><feColorMatrix in="n" type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".12"/></feComponentTransfer></filter>
+ <g id="flower"><path d="M0 -24 C-19 -38 -19 -12 -8 -4 C-33 -14 -30 12 -8 8 C-14 31 9 28 8 8 C32 17 37 -8 10 -5 C18 -29 2 -34 0 -24" fill="#bc513d" stroke="#793b32" stroke-width="2.3"/><circle r="9" fill="#e3ab43" stroke="#f6e1a5" stroke-width="2"/></g>
+ <g id="leaflet"><path d="M0 0 Q-24 -38 7 -70 Q40 -32 0 0" fill="url(#leaf)" stroke="#354d37" stroke-width="3"/><path d="M0 -2 Q10 -38 7 -68" stroke="#d9d59a" stroke-width="2" fill="none"/></g>
+ <g id="diya"><ellipse cx="0" cy="9" rx="53" ry="14" fill="#84421e"/><path d="M-53 0 Q0 55 53 0 Z" fill="url(#gold)" stroke="#8f4e25" stroke-width="3"/><path d="M0 -2 Q-19 -40 0 -70 Q22 -38 0 -2Z" fill="#f6af39" stroke="#fff2ac" stroke-width="5"/><path d="M0 -8 Q-8 -23 0 -40 Q8 -24 0 -8Z" fill="#fff0b8"/></g>
+</defs>
+<rect width="1448" height="1086" fill="url(#paper)"/>
+<g fill="none" stroke="#863f31" opacity=".75"><rect x="24" y="24" width="1400" height="1038" rx="44" stroke-width="4"/><rect x="48" y="48" width="1352" height="990" rx="32" stroke="#b99558" stroke-width="2"/></g>
+<g opacity=".83"><path d="M0 0 Q160 130 330 20" stroke="#627747" stroke-width="16" fill="none"/><path d="M1448 0 Q1300 130 1118 20" stroke="#627747" stroke-width="16" fill="none"/>
+<use href="#leaflet" transform="translate(90 20) rotate(70) scale(.40)"/><use href="#leaflet" transform="translate(1358 20) rotate(-70) scale(.40)"/><use href="#leaflet" transform="translate(154 35) rotate(62) scale(.40)"/><use href="#leaflet" transform="translate(1294 35) rotate(-62) scale(.40)"/><use href="#leaflet" transform="translate(218 20) rotate(54) scale(.40)"/><use href="#leaflet" transform="translate(1230 20) rotate(-54) scale(.40)"/><use href="#leaflet" transform="translate(282 35) rotate(46) scale(.40)"/><use href="#leaflet" transform="translate(1166 35) rotate(-46) scale(.40)"/><use href="#leaflet" transform="translate(346 20) rotate(38) scale(.40)"/><use href="#leaflet" transform="translate(1102 20) rotate(-38) scale(.40)"/><use href="#leaflet" transform="translate(410 35) rotate(30) scale(.40)"/><use href="#leaflet" transform="translate(1038 35) rotate(-30) scale(.40)"/><use href="#leaflet" transform="translate(474 20) rotate(22) scale(.40)"/><use href="#leaflet" transform="translate(974 20) rotate(-22) scale(.40)"/><use href="#leaflet" transform="translate(538 35) rotate(14) scale(.40)"/><use href="#leaflet" transform="translate(910 35) rotate(-14) scale(.40)"/><use href="#flower" transform="translate(118 90) scale(0.75)"/><use href="#flower" transform="translate(232 65) scale(0.55)"/><use href="#flower" transform="translate(1330 90) scale(0.75)"/><use href="#flower" transform="translate(1215 65) scale(0.55)"/><use href="#flower" transform="translate(88 960) scale(0.6)"/><use href="#flower" transform="translate(1360 960) scale(0.6)"/><use href="#flower" transform="translate(250 995) scale(0.35)"/><use href="#flower" transform="translate(1198 995) scale(0.35)"/></g><g transform="translate(724 580)">
+ <ellipse cy="360" rx="500" ry="64" fill="#c89a71" opacity=".35"/>
+ <path d="M-500 310 Q0 245 500 310 L470 382 Q0 427 -470 382Z" fill="#7d3334" stroke="#c98c47" stroke-width="13"/>
+ <path d="M-458 341 Q0 290 458 341" fill="none" stroke="#efd5a0" stroke-width="7" stroke-dasharray="3 18" stroke-linecap="round"/>
+ <g transform="translate(-240 70)">
+  <ellipse cx="0" cy="260" rx="140" ry="23" fill="#835131" opacity=".34"/>
+  <path d="M-80 80 Q-129 175 -83 235 Q0 276 83 235 Q127 171 80 80Z" fill="url(#gold)" stroke="#945328" stroke-width="7"/>
+  <path d="M-81 115 Q0 140 81 115 M-84 204 Q0 228 84 204" stroke="#fff2bd" stroke-width="9" fill="none"/>
+  <ellipse cy="84" rx="82" ry="24" fill="#af632c" stroke="#f1cb6b" stroke-width="7"/>
+  <path d="M-70 72 Q-190 -85 -74 -72 Q-32 -54 -12 48" fill="url(#leaf)" stroke="#3e5a3b" stroke-width="5"/>
+  <path d="M-47 70 Q-124 -118 -28 -105 Q12 -67 -10 50" fill="url(#leaf)" stroke="#3e5a3b" stroke-width="5"/>
+  <path d="M70 72 Q190 -85 74 -72 Q32 -54 12 48" fill="url(#leaf)" stroke="#3e5a3b" stroke-width="5"/>
+  <path d="M47 70 Q124 -118 28 -105 Q-12 -67 10 50" fill="url(#leaf)" stroke="#3e5a3b" stroke-width="5"/>
+  <path d="M-48 36 Q-73 -92 0 -132 Q70 -97 46 37Z" fill="#9e6338" stroke="#c8955c" stroke-width="6"/>
+  <path d="M-5 -125 Q-35 -152 0 -171 Q32 -145 -5 -125" fill="#617746"/>
+  <ellipse cy="80" rx="85" ry="19" fill="none" stroke="#f8e0a9" stroke-width="4"/>
+  <path d="M0 218 Q-30 180 0 145 Q30 180 0 218Z M-3 215 Q-61 201 -48 170 Q-18 164 -3 215 M3 215 Q61 201 48 170 Q18 164 3 215" stroke="#993933" stroke-width="7" fill="#d77656" stroke-linejoin="round"/>
+ </g>
+ <g transform="translate(230 125)">
+  <path d="M-145 130 L130 130 L95 245 L-110 245Z" fill="#8f4330" stroke="#e1a450" stroke-width="9"/>
+  <path d="M-147 126 L0 50 L130 126" fill="#b8763d" stroke="#5f3524" stroke-width="9"/>
+  <path d="M-143 130 H130 M-108 205 H92" stroke="#f1c16d" stroke-width="6" stroke-dasharray="15 9"/>
+  <path d="M0 130 C-74 30 -40 -35 -3 -110 C-8 -26 42 3 39 67 C102 -15 114 50 39 135 Z" fill="#e78427" stroke="#c55b22" stroke-width="5"/>
+  <path d="M0 130 C-41 46 -11 -15 0 -57 C19 10 48 64 19 125 Z" fill="#ffd064"/>
+  <path d="M0 126 C-21 56 -4 35 11 20 C17 62 26 91 6 126 Z" fill="#fff0a5"/>
+ </g>
+ <use href="#diya" transform="translate(-425 214) scale(.7)"/><use href="#diya" transform="translate(450 214) scale(.7)"/>
+</g>
+<use href="#flower" transform="translate(1224.0 928.0) rotate(0) scale(0.27)"/><use href="#flower" transform="translate(1203.7 934.8) rotate(17) scale(0.33)"/><use href="#flower" transform="translate(1144.6 941.0) rotate(34) scale(0.39)"/><use href="#flower" transform="translate(1051.4 946.1) rotate(51) scale(0.27)"/><use href="#flower" transform="translate(931.7 949.8) rotate(68) scale(0.33)"/><use href="#flower" transform="translate(795.2 951.8) rotate(85) scale(0.39)"/><use href="#flower" transform="translate(652.8 951.8) rotate(102) scale(0.27)"/><use href="#flower" transform="translate(516.3 949.8) rotate(119) scale(0.33)"/><use href="#flower" transform="translate(396.6 946.1) rotate(136) scale(0.39)"/><use href="#flower" transform="translate(303.4 941.0) rotate(153) scale(0.27)"/><use href="#flower" transform="translate(244.3 934.8) rotate(170) scale(0.33)"/><use href="#flower" transform="translate(224.0 928.0) rotate(187) scale(0.39)"/><use href="#flower" transform="translate(244.3 921.2) rotate(204) scale(0.27)"/><use href="#flower" transform="translate(303.4 915.0) rotate(221) scale(0.33)"/><use href="#flower" transform="translate(396.6 909.9) rotate(238) scale(0.39)"/><use href="#flower" transform="translate(516.3 906.2) rotate(255) scale(0.27)"/><use href="#flower" transform="translate(652.8 904.2) rotate(272) scale(0.33)"/><use href="#flower" transform="translate(795.2 904.2) rotate(289) scale(0.39)"/><use href="#flower" transform="translate(931.7 906.2) rotate(306) scale(0.27)"/><use href="#flower" transform="translate(1051.4 909.9) rotate(323) scale(0.33)"/><use href="#flower" transform="translate(1144.6 915.0) rotate(340) scale(0.39)"/><use href="#flower" transform="translate(1203.7 921.2) rotate(357) scale(0.27)"/><rect width="1448" height="1086" fill="#5f3425" opacity=".095" filter="url(#rough)"/></svg>
