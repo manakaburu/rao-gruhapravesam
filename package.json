@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --configLoader runner",
-    "check": "tsc --noEmit && node scripts/check-artwork.mjs && node scripts/verify-content.mjs && node scripts/check-story-pacing.mjs && node scripts/check-mobile-mode.mjs && node scripts/check-release-v4.mjs && node scripts/check-last-two.mjs",
+    "check": "tsc --noEmit && node scripts/check-artwork.mjs && node scripts/verify-content.mjs && node scripts/check-story-pacing.mjs && node scripts/check-mobile-mode.mjs && node scripts/check-release-v4.mjs && node --experimental-strip-types scripts/check-watercolor.mjs",
     "build": "npm run check && vite build --configLoader runner",
     "preview": "vite preview --configLoader runner"
   },

@@ -308,10 +308,6 @@ address>* { display:block }
   -webkit-mask-position:50% 50%; mask-position:50% 50%;
   -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
 }
-/* Typography fades independently of the painted plate, including nested illustrations. */
-.is-cinematic .spread:is(.departing,.revealing) :is(.heading-block,.verse-block>.floral-rule,.verse-block>.verse,.imprint,.source-line,.schedule-inset,.meal-inset>p,.meal-inset>time,.address-print address,.invitation-actions) {
-  opacity:var(--text-opacity,1)
-}
 /* Art participates in the camera movement; don't fake separate layers within a flattened painting. */
 .is-cinematic .spread:is(.current,.departing,.revealing) .plate {
   transform:translate(var(--art-x,0px),var(--art-y,0px));
@@ -335,16 +331,6 @@ address>* { display:block }
     transform:translate(calc(var(--art-x,0px) * .36),calc(var(--art-y,0px) * .45));
     scale:calc(1 + (var(--art-scale,1) - 1) * .4)
   }
-}
-/* Warm paint bloom: atmospheric highlights, never a solid parchment cover. */
-.is-cinematic .watercolor-veil:not([hidden]) {
-  position:absolute;inset:0;pointer-events:none;z-index:4;display:block;
-  opacity:var(--mist-opacity,0);
-  -webkit-mask:none;mask:none;
-  background:radial-gradient(ellipse at 54% 53%,#fff9ec 0%,#fae4bcbb 39%,transparent 76%),
-             radial-gradient(ellipse at 22% 27%,#df9d69aa 0%,transparent 62%);
-  transform:translateY(var(--mist-shift,0px));
-  mix-blend-mode:screen;
 }
 /* Respect the native composition of the *entire* banana-leaf painting. */
 .plate--feast,
@@ -445,14 +431,6 @@ address>* { display:block }
 }
 
 
-/* Slow pigment dissolve: fade the outgoing painting under the expanding alpha
-   reveal, instead of leaving a second full-strength scene behind the next one.
-   CSS variable derives entirely from scroll progress, so reverse is identical. */
-.is-cinematic .spread.departing .plate {
-  opacity:calc(var(--scene-leave,1) * var(--scene-leave,1));
-}
-
-
 /* Mobile-scroll stability / 2026-11-19
  * Touch browsers change visual viewport height during native scrolling.
  * Use the natural document for touch and apply one-time chapter watercolor
@@ -532,39 +510,6 @@ address>* { display:block }
 .is-cinematic .spread:is(.current,.departing,.revealing) .story-petal {
   transform:none !important;
 }
-/* Keep the outgoing scene in place under the incoming one. Reveal only the
-   incoming ART with the paper texture; title and words have independent fades. */
-.is-cinematic .spread.revealing {
-  -webkit-mask:none !important;
-  mask:none !important;
-  background:transparent !important;
-}
-.is-cinematic .spread.revealing .plate {
-  -webkit-mask-image:url('/assets/watercolor-mask.png');
-  mask-image:url('/assets/watercolor-mask.png');
-  -webkit-mask-size:var(--reveal-size,1%) var(--reveal-size,1%);
-  mask-size:var(--reveal-size,1%) var(--reveal-size,1%);
-  -webkit-mask-position:50% 50%; mask-position:50% 50%;
-  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
-}
-/* The incoming heading arrives EARLY, before its full description and painting.
-   Departing heading is almost gone before incoming words appear. */
-.is-cinematic .spread:is(.revealing,.departing) .heading-block {
-  opacity:var(--title-opacity,1) !important;
-  transform:none !important;
-}
-.is-cinematic .spread:is(.revealing,.departing) .verse-block,
-.is-cinematic .spread:is(.revealing,.departing) .schedule-inset,
-.is-cinematic .spread:is(.revealing,.departing) .meal-inset,
-.is-cinematic .spread:is(.revealing,.departing) .closing-inset {
-  opacity:var(--text-opacity,1) !important;
-  transform:none !important;
-}
-/* Individual nested text still observes the scene opacity; no animation of font metrics. */
-.is-cinematic .spread:is(.revealing,.departing) :is(.verse,.source-line,.imprint,.schedule-inset,.meal-inset>p,.meal-inset>time,.address-print address,.invitation-actions) {
-  opacity:1;
-  transform:none;
-}
 /* Mobile: no shifting art, and next chapter heading appears first. */
 .stage.story-fallback .spread .heading-block { transition:opacity .9s ease-out !important;transform:none !important;transition-delay:0s !important }
 .stage.story-fallback .spread .plate { transition:opacity 1.15s ease-out !important; transition-delay:.22s !important }
@@ -618,14 +563,12 @@ address>* { display:block }
   .stage.story-fallback .spread * {transition:none !important;animation:none !important}
 }
 
-/* The previous image fades earlier to avoid the two illustrations ghosting together. */
-.is-cinematic .spread.departing .plate { opacity:var(--paint-depart-opacity,1) !important }
 @media(max-width:700px) { .music-info-toggle{display:none} }
 
 /* ===== V5: Stable sticky cinematic story (desktop and mobile) =====
    No GSAP pin spacer, no viewport-height gating, no dynamic-toolbar mode changes.
    Scroll only advances chapter progress; the artwork stays anchored in one frame. */
-.story-runway { position:relative; --story-scroll-distance:11250px; }
+.story-runway { position:relative; --story-scroll-distance:5800px; }
 .story-runway.story-is-active {
   height:calc(100svh - var(--mast-actual,var(--header)) + var(--story-scroll-distance));
 }
@@ -671,7 +614,7 @@ address>* { display:block }
 /* Mobile chapters still transform in one position. Compact typography and art
    inside a stable small-viewport-height frame instead of stacking into a long page. */
 @media (max-width:860px) {
-  .story-runway.story-is-active { --story-scroll-distance:7200px; }
+  .story-runway.story-is-active { --story-scroll-distance:4200px; }
   .story-runway.story-is-active .spread,
   .story-runway.story-is-active .spread--blessings,
   .story-runway.story-is-active .spread--ceremonies,
@@ -740,220 +683,93 @@ address>* { display:block }
   white-space:normal; background:#fff9ee; border:1px solid var(--rule); border-radius:.5rem;
   box-shadow:0 5px 16px #47301f1e; }
 
-/* ================================================================
-   V6 — FULL-VIEWPORT CINEMATIC WATERCOLOR (targeted correction)
-   The veil is a sibling of .spreads and .stage-foot, and therefore
-   covers the ENTIRE pinned storytelling stage, not merely a painting.
-   It zooms and dissolves from scroll progress; artworks never move.
-   ================================================================ */
-.story-runway { --story-scroll-distance:5800px; }
-@media(max-width:860px) {
-  .story-runway.story-is-active { --story-scroll-distance:4200px; }
+/* The incoming paper and its edge share the painted field's dimensions, focus
+   and aperture. The caption is centered in that field, independent of the mask. */
+.is-cinematic .spreads {
+  --focus-x:50%;
+  --focus-y:50%;
+  --paper-strength:.12;
+  --edge-strength:.23;
 }
-/* The incoming painting gently fades into the page as a whole rather than
-   being independently spotlight-masked, which previously looked patchy. */
-.is-cinematic .spread.revealing .plate,
-.is-cinematic .spread.revealing .plate--feast,
-.is-cinematic .spread.revealing .plate--ceremonies,
-.is-cinematic .spread.revealing .plate--blessings,
-.is-cinematic .spread.revealing .plate--closing {
-  -webkit-mask:none !important;
-  mask:none !important;
-  opacity:var(--incoming-art-opacity,0) !important;
+.is-cinematic .spreads[data-incoming="blessings"] { --paper-strength:.08; --edge-strength:.18; }
+.is-cinematic .spreads[data-incoming="ceremonies"] { --paper-strength:.17; --edge-strength:.27; }
+.is-cinematic .spreads[data-incoming="feast"] { --paper-strength:.18; --edge-strength:.24; }
+.is-cinematic .spreads[data-incoming="closing"] { --paper-strength:.20; --edge-strength:.27; }
+@media(min-width:861px) {
+  .is-cinematic .spreads:is([data-incoming="welcome"],[data-incoming="feast"],[data-incoming="closing"]) { --focus-x:calc(50% + 3vw); }
+  .is-cinematic .spreads:is([data-incoming="ceremonies"],[data-incoming="blessings"]) { --focus-x:calc(50% - 3vw); }
+}
+.is-cinematic .spread.revealing,
+.is-cinematic .watercolor-veil::before {
+  -webkit-mask-size:var(--watercolor-aperture-size) var(--watercolor-aperture-size);
+  mask-size:var(--watercolor-aperture-size) var(--watercolor-aperture-size);
+  -webkit-mask-position:var(--focus-x) var(--focus-y);
+  mask-position:var(--focus-x) var(--focus-y);
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
 }
 .is-cinematic .spread.revealing {
-  -webkit-mask:none !important;
-  mask:none !important;
-  background:transparent !important;
+  --wash-color:rgb(184 135 86 / calc(var(--pigment) * var(--paper-strength)));
+  background:linear-gradient(var(--wash-color),var(--wash-color)),var(--paper) var(--grain);
+  -webkit-mask-image:url('/assets/watercolor-mask-clarity.png');
+  mask-image:url('/assets/watercolor-mask-clarity.png');
 }
-/* The old image-only mask remains in the stylesheet for historical context,
-   but the rules above intentionally supersede it. The native paper edges
-   on each source illustration remain unchanged. */
 .is-cinematic .watercolor-veil:not([hidden]) {
   position:absolute;
   inset:0;
-  z-index:6;
-  display:block;
-  overflow:hidden;
-  pointer-events:none;
-  isolation:isolate;
-  opacity:var(--veil-opacity,0);
-  background:transparent;
-  mix-blend-mode:normal;
-  transform:none;
-  -webkit-mask:none;
-  mask:none;
-  contain:layout paint;
-}
-.watercolor-veil__pigment,
-.watercolor-veil__grain { position:absolute; display:block; inset:0; pointer-events:none; }
-.watercolor-veil__pigment {
-  inset:-15%;
-  background:
-    radial-gradient(ellipse 65% 65% at 52% 49%,#fff9eb 0%,#faefd8ee 41%,#e1b99790 67%,transparent 93%),
-    radial-gradient(ellipse 43% 52% at 14% 28%,#c5a775c9,transparent 78%),
-    radial-gradient(ellipse 48% 57% at 88% 76%,#e4b47ea8,transparent 83%),
-    url('/assets/paper-grain.png');
-  -webkit-mask-image:url('/assets/watercolor-mask.png');
-  mask-image:url('/assets/watercolor-mask.png');
-  -webkit-mask-size:100% 100%; mask-size:100% 100%;
-  -webkit-mask-position:center; mask-position:center;
-  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
-  transform-origin:50% 53%;
-  transform:scale(var(--veil-scale,.78));
-  will-change:transform;
-}
-.watercolor-veil__grain {
-  background:linear-gradient(105deg,#f4e0c565,#f9f0e084 45%,#dec5a055),url('/assets/paper-grain.png');
-  mix-blend-mode:soft-light;
-  opacity:var(--veil-grain-opacity,0);
-}
-/* Keep paint and titles still in all six scenes, including the transition. */
-.is-cinematic .spread:is(.current,.departing,.revealing) .plate {
-  transform:none !important;
-  scale:1 !important;
-}
-@media(prefers-reduced-motion:reduce) {
-  .watercolor-veil { display:none !important; }
-}
-
-/* V8 — Reference-faithful painterly dissolve, across the WHOLE scene.
-   The same watercolor texture that previously revealed only the artwork now
-   reveals the complete incoming chapter. Never display a dark/scorched ring.
-   This block intentionally overrides earlier V4/V6/V7 transition rules. */
-.is-cinematic .spread.revealing {
-  background:var(--paper) var(--grain) !important;
-  -webkit-mask-image:url('/assets/watercolor-mask.png') !important;
-  mask-image:url('/assets/watercolor-mask.png') !important;
-  -webkit-mask-size:var(--watercolor-aperture-size,1px) var(--watercolor-aperture-size,1px) !important;
-  mask-size:var(--watercolor-aperture-size,1px) var(--watercolor-aperture-size,1px) !important;
-  -webkit-mask-position:50% 50% !important;
-  mask-position:50% 50% !important;
-  -webkit-mask-repeat:no-repeat !important;
-  mask-repeat:no-repeat !important;
-}
-.is-cinematic .spread.departing .plate { opacity:1 !important; }
-.is-cinematic .watercolor-veil:not([hidden]) {
-  display:block;
-  position:absolute;
-  inset:0;
-  z-index:6;
-  opacity:1;
-  background:none !important;
-  -webkit-mask:none !important;
-  mask:none !important;
-  mix-blend-mode:normal;
-  transform:none !important;
-  pointer-events:none;
-}
-.is-cinematic .watercolor-veil__pigment,
-.is-cinematic .watercolor-veil__grain { display:none }
-.chapter-portal__caption {
-  position:absolute;
-  inset:0 0 var(--foot) 0;
+  z-index:3;
   display:grid;
   place-items:center;
+  overflow:hidden;
   pointer-events:none;
+  opacity:1;
+  background:none;
+  transform:none;
+}
+.is-cinematic .watercolor-veil::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,#a77347,#bd955e 55%,#ab805a);
+  opacity:calc(var(--pigment) * var(--edge-strength));
+  -webkit-mask-image:url('/assets/watercolor-seam-final.png');
+  mask-image:url('/assets/watercolor-seam-final.png');
+}
+.chapter-portal__caption {
+  position:relative;
+  width:min(86%,34rem);
+  text-align:center;
   opacity:var(--glimpse-opacity,0);
-  transform:translateY(calc(var(--glimpse-lift,1) * 8px));
 }
 .chapter-portal__title {
   display:block;
-  width:min(85%,42rem);
-  text-align:center;
-  font:500 clamp(2.2rem,5.1vw,5.3rem)/1.02 var(--display);
-  letter-spacing:-.035em;
+  font:600 clamp(1.5rem,3vw,2.8rem)/1.06 var(--display);
+  letter-spacing:-.025em;
   color:var(--ink);
   text-wrap:balance;
-  text-shadow:0 1px 0 #fff8ed,0 0 12px #fff6e9;
+  paint-order:stroke fill;
+  -webkit-text-stroke:1.5px rgb(255 248 232 / .88);
 }
 @media(max-width:860px) {
-  .chapter-portal__title {width:min(78%,23rem);font-size:clamp(1.85rem,7.5vw,3rem);}
+  .chapter-portal__title { font-size:clamp(1.35rem,5.8vw,1.85rem); }
+}
+/* Fade text at its own boundary. The ceremony, meal and venue illustrations
+   are nested inside information groups and must stay opaque under the mask. */
+.is-cinematic .spread:is(.revealing,.departing) .heading-block { opacity:var(--title-opacity); }
+.is-cinematic .spread:is(.revealing,.departing) :is(.verse-block > :not(.plate),.schedule-inset,.meal-inset > p,.meal-inset > time,.address-print address,.invitation-actions) {
+  opacity:var(--text-opacity);
+}
+.is-cinematic .spread:is(.revealing,.departing) :is(.plate,.feast-reveal) { opacity:1; }
+
+/* Reserve the right end of the footer for the persistent music controls. */
+.is-cinematic .stage-foot { margin-right:max(var(--gutter),11.75rem); }
+.invitation-music { bottom:max(calc((var(--foot) - 44px) / 2),env(safe-area-inset-bottom)); }
+@media(max-width:700px) {
+  .is-cinematic .stage-foot { margin-right:max(4.25rem,calc(env(safe-area-inset-right) + 3.5rem)); }
+  .scene-progress { min-width:0; }
+  .scene-progress span:last-child { white-space:normal; }
+  .scroll-cue { flex-shrink:0; margin-left:.4rem; }
 }
 @media(prefers-reduced-motion:reduce) {
-  .chapter-portal__caption { display:none!important }
-}
-
-
-/* V9 — READABLE CINEMATIC WATERCOLOR REVEAL (targeted V8 refinement).
-   Keep the entire incoming scene fully opaque INSIDE a concentrated organic
-   aperture; the old source mask's broad, semi-transparent fringe caused
-   muddy double exposure. No hard circular borders and no dark burn ring. */
-.is-cinematic .spread.revealing {
-  -webkit-mask-image:url('/assets/watercolor-mask-clarity.png') !important;
-  mask-image:url('/assets/watercolor-mask-clarity.png') !important;
-}
-/* The floating chapter glimpse is typography only: NO parchment card, border,
-   box-shadow or pseudo-element. Preserve the mask, title timing and readability. */
-.is-cinematic .chapter-portal__caption,
-.is-cinematic .chapter-portal__title {
-  background:transparent;
-  border:0;
-  border-radius:0;
-  box-shadow:none;
-}
-.is-cinematic .chapter-portal__caption::before { content:none; display:none; }
-.is-cinematic .chapter-portal__title {
-  position:relative; z-index:1;
-  text-shadow:0 1px 0 #fffaf0,0 0 12px #fff6e9;
-}
-
-
-/* === FINAL LOCK · V10 · QUIET CHAPTER REVEALS ONLY =======================
-   Feast and closing share a near-identical parchment background with the
-   outgoing scene; a faint temporary pigment separation and soft watercolor
-   seam make the last two dissolves legible, with no hard burn-ring or flash.
-   This does NOT touch entrance, welcome, blessings or ceremonies transitions.
-   ==================================================================== */
-.is-cinematic .spread.revealing:is(.spread--feast,.spread--closing) {
-  background:
-    linear-gradient(rgba(196,148,96,var(--quiet-paper-tint,0)),rgba(196,148,96,var(--quiet-paper-tint,0))),
-    var(--paper) var(--grain) !important;
-}
-.is-cinematic .watercolor-veil[data-quiet-transition="true"]::before {
-  content:'';
-  position:absolute;
-  inset:0 0 var(--foot) 0;
-  pointer-events:none;
-  z-index:0;
-  background:linear-gradient(145deg,#8f5940,#c09455 47%,#9d6348 85%);
-  opacity:var(--quiet-edge-opacity,0);
-  -webkit-mask-image:url('/assets/watercolor-seam-final.png');
-  mask-image:url('/assets/watercolor-seam-final.png');
-  -webkit-mask-size:var(--edge-mask-size,1px) var(--edge-mask-size,1px);
-  mask-size:var(--edge-mask-size,1px) var(--edge-mask-size,1px);
-  -webkit-mask-repeat:no-repeat;
-  mask-repeat:no-repeat;
-  -webkit-mask-position:var(--quiet-focus-x,50%) 50%;
-  mask-position:var(--quiet-focus-x,50%) 50%;
-}
-/* On desktop the last-two scenes put their richest imagery in the right column.
-   Bias only their opening slightly right so the watercolor actually reveals
-   painting during the centered-title beat. Mobile remains exactly centered. */
-@media (min-width:861px) {
-  .is-cinematic .spread.revealing:is(.spread--feast,.spread--closing) {
-    -webkit-mask-position:calc(50% + 4vw) 50% !important;
-    mask-position:calc(50% + 4vw) 50% !important;
-  }
-}
-@media (prefers-reduced-motion:reduce) {
-  .is-cinematic .watercolor-veil[data-quiet-transition="true"]::before {display:none!important}
-}
-
-
-/* Final V10: the ART and the INFORMATION must not share one opacity.
-   Earlier V9 faded their parent wrappers, inadvertently hiding the entire
-   painted feast/venue during the watercolor opening. Only the ceremony,
-   feast, and closing handoff is corrected; earlier chapter rules are intact. */
-.is-cinematic .spread--ceremonies.departing .verse-block,
-.is-cinematic .spread--feast:is(.departing,.revealing) .meal-inset,
-.is-cinematic .spread--closing.revealing .closing-inset {
-  opacity:1 !important;
-}
-.is-cinematic .spread--ceremonies.departing .verse-block > :not(.plate),
-.is-cinematic .spread--feast:is(.departing,.revealing) .meal-inset > p,
-.is-cinematic .spread--feast:is(.departing,.revealing) .meal-inset > time,
-.is-cinematic .spread--closing.revealing .address-print address,
-.is-cinematic .spread--closing.revealing .invitation-actions {
-  opacity:var(--text-opacity,1) !important;
+  .watercolor-veil { display:none !important; }
 }

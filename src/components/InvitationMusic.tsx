@@ -4,137 +4,115 @@ import { useEffect, useRef, useState } from 'react'
 const SELECTED_MUSIC = import.meta.env.BASE_URL + 'audio/achyutam-keshavam-user-upload.mp3'
 
 export function InvitationMusic() {
-  const ref = useRef<HTMLAudioElement | null>(null)
-  const raf = useRef<number | null>(null)
-  const playingRef = useRef(false)
-  const userPausedRef = useRef(false)
+  const ref = useRef<HTMLAudioElement>(null)
+  const toggle = useRef<() => void>(() => {})
   const [playing, setPlaying] = useState(false)
   const [expanded, setExpanded] = useState(false)
   const [message, setMessage] = useState('')
 
-  const fade = (to: number, duration: number, finished?: () => void) => {
-    const sound = ref.current
-    if (!sound) return
-    if (raf.current !== null) cancelAnimationFrame(raf.current)
-    const from = sound.volume
-    const start = performance.now()
-    const tick = (now: number) => {
-      const p = Math.min(1, (now - start) / duration)
-      sound.volume = Math.max(0, Math.min(1, from + (to - from) * (p * p * (3 - 2 * p))))
-      if (p < 1) raf.current = requestAnimationFrame(tick)
-      else { raf.current = null; finished?.() }
-    }
-    raf.current = requestAnimationFrame(tick)
-  }
-
   useEffect(() => {
-    let disposed = false
-    const sound = new Audio()
-    sound.preload = 'auto'
-    sound.loop = true
-    sound.volume = 0
-    ref.current = sound
-    sound.src = SELECTED_MUSIC
-    sound.onerror = () => {
-      if (disposed) return
-      setMessage('Uploaded audio could not be loaded. Please try again.')
-      setPlaying(false)
-      playingRef.current = false
+    const sound = ref.current!
+    let userPaused = false
+    let request = 0
+    let frame = 0
+
+    function fade(to: number, duration: number, finished?: () => void) {
+      cancelAnimationFrame(frame)
+      const from = sound.volume
+      const start = performance.now()
+      function tick(now: number) {
+        const p = Math.min(1, (now - start) / duration)
+        sound.volume = from + (to - from) * p * p * (3 - 2 * p)
+        if (p < 1) frame = requestAnimationFrame(tick)
+        else finished?.()
+      }
+      frame = requestAnimationFrame(tick)
     }
-    // Attempt audible autoplay as early as the browser allows. Browser policy may
-    // reject it, especially on Safari; in that case start on the visitor's first
-    // natural interaction with the page (including the first touch/scroll). This
-    // honors the requested automatic experience without disabling pause controls.
-    const startPlayback = () => {
-      if (disposed || playingRef.current || userPausedRef.current || document.hidden) return
-      // play() is called synchronously inside the actual user-gesture callback.
-      void sound.play().then(() => {
-        if (disposed || userPausedRef.current) { sound.pause(); return }
-        playingRef.current = true
+
+    async function startPlayback(explicit = false) {
+      if (userPaused || document.hidden || (!explicit && !sound.paused)) return
+      const token = ++request
+      cancelAnimationFrame(frame)
+      // A quiet but audible start obeys the browser's normal autoplay policy.
+      if (sound.paused) sound.volume = .04
+      try {
+        await sound.play()
+        if (token !== request) return
         setPlaying(true)
         setMessage('')
-        fade(.42, 1450)
-        removeGestures()
-      }).catch(() => {
-        if (!disposed) setMessage('Tap anywhere to start the music, or use Play')
-      })
-    }
-    const startOnGesture = (event: Event) => {
-      // A direct tap on the music button already has its own toggle logic.
-      const target = event.target
-      if (target instanceof Element && target.closest('.invitation-music')) return
-      startPlayback()
-    }
-    const removeGestures = () => {
-      document.removeEventListener('pointerdown', startOnGesture)
-      document.removeEventListener('touchstart', startOnGesture)
-      document.removeEventListener('keydown', startOnGesture)
-    }
-    const installGestures = () => {
-      document.addEventListener('pointerdown', startOnGesture, { passive: true })
-      document.addEventListener('touchstart', startOnGesture, { passive: true })
-      document.addEventListener('keydown', startOnGesture)
-    }
-    installGestures()
-    startPlayback()
-    const pauseWhenHidden = () => {
-      if (document.hidden && !sound.paused) {
-        if (raf.current !== null) cancelAnimationFrame(raf.current)
-        sound.pause()
-        sound.volume = 0
+        fade(.42, 1350)
+      } catch (error) {
+        if (token !== request) return
         setPlaying(false)
-        playingRef.current = false
-      } else if (!document.hidden) {
-        // A tab opened in the background can miss the initial autoplay attempt.
-        // Try again once visible, but never resume after an intentional Pause.
-        startPlayback()
+        if (error instanceof DOMException && error.name === 'NotAllowedError') {
+          setMessage('Tap to play music')
+        } else if (!(error instanceof DOMException && error.name === 'AbortError')) {
+          setMessage('Music could not play. Tap Play to retry.')
+        }
       }
     }
-    const onPageShow = () => startPlayback()
-    document.addEventListener('visibilitychange', pauseWhenHidden)
-    window.addEventListener('pageshow', onPageShow)
-    return () => {
-      disposed = true
-      document.removeEventListener('visibilitychange', pauseWhenHidden)
-      window.removeEventListener('pageshow', onPageShow)
-      removeGestures()
-      if (raf.current !== null) cancelAnimationFrame(raf.current)
+
+    function startOnGesture(event: Event) {
+      if (!event.isTrusted || (event.target instanceof Element && event.target.closest('.music-button'))) return
+      if (event instanceof PointerEvent && event.type === 'pointerdown' && event.pointerType !== 'mouse') return
+      if (event instanceof KeyboardEvent && (event.metaKey || event.ctrlKey || event.altKey || event.key === 'Escape')) return
+      // Touch activation can arrive at touchend/pointerup; a scroll alone may
+      // never qualify. Call play() in the event handler, before any async work.
+      void startPlayback()
+    }
+    function suspend() {
+      ++request
+      cancelAnimationFrame(frame)
       sound.pause()
-      sound.removeAttribute('src')
-      sound.load()
-      ref.current = null
+      setPlaying(false)
+    }
+    function onVisibility() {
+      if (document.hidden) suspend()
+      else void startPlayback()
+    }
+    const onPageShow = (event: PageTransitionEvent) => { if (event.persisted) void startPlayback() }
+    const onPause = () => { if (sound.paused) setPlaying(false) }
+    const onError = () => {
+      suspend()
+      setMessage('Music could not load. Tap Play to retry.')
+    }
+    toggle.current = () => {
+      if (!userPaused && !sound.paused) {
+        userPaused = true
+        ++request
+        setPlaying(false)
+        setMessage('')
+        fade(0, 600, () => sound.pause())
+      } else {
+        userPaused = false
+        if (sound.error) sound.load()
+        void startPlayback(true)
+      }
+    }
+    const events = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'] as const
+    for (const event of events) document.addEventListener(event, startOnGesture, {capture: true, passive: true})
+    sound.addEventListener('pause', onPause)
+    sound.addEventListener('error', onError)
+    document.addEventListener('visibilitychange', onVisibility)
+    window.addEventListener('pageshow', onPageShow)
+    void startPlayback()
+    return () => {
+      ++request
+      for (const event of events) document.removeEventListener(event, startOnGesture, true)
+      document.removeEventListener('visibilitychange', onVisibility)
+      window.removeEventListener('pageshow', onPageShow)
+      sound.removeEventListener('pause', onPause)
+      sound.removeEventListener('error', onError)
+      cancelAnimationFrame(frame)
+      sound.pause()
     }
   }, [])
 
-  async function toggleMusic() {
-    const sound = ref.current
-    if (!sound) return
-    if (playingRef.current) {
-      userPausedRef.current = true
-      playingRef.current = false
-      setPlaying(false)
-      fade(0, 650, () => { if (!playingRef.current) sound.pause() })
-      return
-    }
-    try {
-      userPausedRef.current = false
-      sound.volume = 0
-      await sound.play()
-      playingRef.current = true
-      setPlaying(true)
-      setMessage('')
-      fade(.44, 1350)
-    } catch {
-      setMessage('Playback unavailable. Check your browser or audio file.')
-      setPlaying(false)
-      playingRef.current = false
-    }
-  }
-
   const name = 'Achyutam Keshavam — Uploaded Recording'
   return <div className="invitation-music" data-testid="invitation-music">
+    <audio ref={ref} src={SELECTED_MUSIC} preload="auto" loop />
     <button type="button" className={'music-button' + (playing ? ' is-playing' : '')}
-      onClick={toggleMusic} aria-label={playing ? 'Pause invitation music' : 'Play invitation music'}
+      onClick={() => toggle.current()} aria-label={playing ? 'Pause invitation music' : 'Play invitation music'}
       aria-pressed={playing} title={playing ? 'Pause music' : 'Play music'}>
       <span aria-hidden="true">{playing ? '♫' : '♪'}</span>
       <span className="music-label">{playing ? 'Pause music' : 'Play music'}</span>

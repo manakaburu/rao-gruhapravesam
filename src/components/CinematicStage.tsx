@@ -3,6 +3,7 @@ import type { MouseEvent } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { chapters } from '../data/chapters'
+import { watercolorAt } from '../data/watercolor'
 import { invitation } from '../data/invitation'
 import { ChapterSpread } from './ChapterSpread'
 import { WatercolorTransition } from './WatercolorTransition'
@@ -69,6 +70,7 @@ export function CinematicStage() {
     const el = stage.current!
     const track = runway.current!
     const sections = Array.from(el.querySelectorAll<HTMLElement>('.spread'))
+    const field = el.querySelector<HTMLElement>('.spreads')!
     const veil = el.querySelector<HTMLDivElement>('.watercolor-veil')!
     const meter = el.querySelector<HTMLElement>('.progress-fill')!
     const portalTitle = veil.querySelector<HTMLElement>('.chapter-portal__title')!
@@ -93,53 +95,10 @@ export function CinematicStage() {
     const ease = (n: number) => { const t = clamp(n); return t * t * (3 - 2 * t) }
     let current = -1
     let previousPair = ''
-    // Final lock: Vindu Bhojanam and Our New Abode share the paper palette.
-    // Emphasize ONLY these two incoming watercolor boundaries.
-
-    // V9: A higher-contrast watercolor aperture reveals a fully opaque next chapter.
-    // The old illustration remains stationary behind the incoming stage; the opening
-    // expands decisively so two paintings do not remain semi-visible together.
-    // The new mask retains soft organic edges with a solid, readable center.
-    const portalHeadings: Record<string, string> = {
-      welcome: 'Cordially Inviting You & Your Family',
-      blessings: 'Divine Blessings',
-      ceremonies: 'Auspicious Ceremonies',
-      feast: 'Vindu Bhojanam',
-      closing: 'Our New Abode',
-    }
-    let revealBounds: { width: number; height: number } | null = null
-    const drawWatercolor = (blend: number, incoming: HTMLElement) => {
-      if (!revealBounds) {
-        revealBounds = { width: Math.max(1, incoming.clientWidth),
-          height: Math.max(1, incoming.clientHeight) }
-      }
-      // Nonlinear growth holds the center aperture longer, producing a recognizable
-      // painting-to-painting reveal instead of a nearly immediate crossfade.
-      // At completion, the mask safely covers even the furthest viewport corner.
-      const diagonal = Math.hypot(revealBounds.width, revealBounds.height)
-      const quietScene = incoming.classList.contains('spread--feast') || incoming.classList.contains('spread--closing')
-      // More of the actual feast / framed-address illustration appears near the
-      // title glimpse, not just a blank cream center; other scenes are unchanged.
-      const growth = Math.pow(ease(blend), quietScene ? 1.90 : 2.25)
-      const maskPixels = 1 + 3.45 * diagonal * growth
-      incoming.style.setProperty('--watercolor-aperture-size', `${maskPixels.toFixed(1)}px`)
-      // Reuse precisely the same mask geometry for a delicate pigment-edge accent.
-      // The edge is a temporary visual seam, not an outlined burn ring.
-      if (quietScene) {
-        veil.style.setProperty('--edge-mask-size', `${maskPixels.toFixed(1)}px`)
-        veil.style.setProperty('--quiet-focus-x', window.innerWidth > 860 ? 'calc(50% + 4vw)' : '50%')
-        const edge = ease((blend - .08) / .16) * (1 - ease((blend - .79) / .17))
-        veil.style.setProperty('--quiet-edge-opacity', (edge * .20).toFixed(4))
-        const tint = (0.10 + .11 * ease((blend - .12) / .42)) * (1 - ease((blend - .82) / .18))
-        incoming.style.setProperty('--quiet-paper-tint', tint.toFixed(4))
-      }
-      // Hold a short, legible centered title within the growing watercolor opening.
-      // It clears before the regular in-layout heading and body take over.
-      const glimpse = ease((blend - .43) / .11) * (1 - ease((blend - .66) / .12))
-      veil.style.setProperty('--glimpse-opacity', glimpse.toFixed(4))
-      veil.style.setProperty('--glimpse-lift', (1 - ease((blend - .43) / .13)).toFixed(4))
-    }
+    let diagonal = 0
+    let progress = 0
     const render = (p: number) => {
+      progress = p
       let outgoing = 0
       let incoming = -1
       let blend = 0
@@ -154,27 +113,24 @@ export function CinematicStage() {
         }
         outgoing = i + 1
       }
+      const wash = watercolorAt(blend)
       const pair = `${outgoing}:${incoming}`
       if (pair !== previousPair) {
         prepare(outgoing)
         if (incoming !== -1) {
           prepare(incoming)
-          portalTitle.textContent = portalHeadings[chapters[incoming].id] ?? chapters[incoming].name
-          veil.dataset.quietTransition = incoming >= 4 ? 'true' : 'false'
+          portalTitle.textContent = chapters[incoming].name
+          field.dataset.incoming = chapters[incoming].id
         }
         sections.forEach((section, i) => {
           section.classList.toggle('current', i === outgoing && incoming === -1)
           section.classList.toggle('departing', i === outgoing && incoming !== -1)
           section.classList.toggle('revealing', i === incoming)
           section.style.zIndex = i === incoming ? '2' : '1'
-          if (i !== incoming) {
-            section.style.removeProperty('--watercolor-aperture-size')
-            section.style.removeProperty('--quiet-paper-tint')
-          }
         })
         previousPair = pair
       }
-      if (incoming === -1 && p >= chapters[outgoing].start + .012) prepare(outgoing + 1)
+      prepare(outgoing + 1)
       const readingIndex = incoming !== -1 && blend >= .50 ? incoming : outgoing
       if (readingIndex !== current) {
         current = readingIndex
@@ -194,25 +150,22 @@ export function CinematicStage() {
         section.style.setProperty('--scene-depth', local.toFixed(4))
         section.style.setProperty('--scene-leave', (isOutgoing && incoming !== -1 ? (1 - blend) : 1).toFixed(4))
         section.style.setProperty('--reveal-progress', blend.toFixed(4))
-        section.style.setProperty('--incoming-art-opacity', '1')
         // Centered chapter glimpse runs first; the normal heading arrives after it clears.
         // The actual artwork never moves or zooms; only the portal boundary expands.
-        const titleOpacity = isIncoming ? ease((blend - .79) / .19)
-          : incoming !== -1 ? 1 - ease(blend / .20) : 1
-        const textOpacity = isIncoming ? ease((blend - .88) / .12)
-          : incoming !== -1 ? 1 - ease(blend / .26) : 1
+        const titleOpacity = isIncoming ? wash.heading : incoming === -1 ? 1 : wash.departingHeading
+        const textOpacity = isIncoming ? wash.body : incoming === -1 ? 1 : wash.departingBody
         section.style.setProperty('--title-opacity', titleOpacity.toFixed(4))
-        section.style.setProperty('--paint-depart-opacity', '1')
         section.style.setProperty('--text-opacity', textOpacity.toFixed(4))
       })
       veil.hidden = incoming === -1
-      if (incoming === -1) {
-        veil.dataset.quietTransition = 'false'
-        veil.style.removeProperty('--quiet-edge-opacity')
-        veil.style.removeProperty('--edge-mask-size')
-        veil.style.removeProperty('--quiet-focus-x')
+      if (incoming !== -1) {
+        if (!diagonal) diagonal = Math.hypot(field.clientWidth, field.clientHeight)
+        field.style.setProperty('--watercolor-aperture-size', (1 + 3.45 * diagonal * wash.aperture).toFixed(1) + 'px')
+        field.style.setProperty('--pigment', wash.pigment.toFixed(4))
+        veil.style.setProperty('--glimpse-opacity', wash.cue.toFixed(4))
+      } else {
+        delete field.dataset.incoming
       }
-      if (incoming !== -1) drawWatercolor(blend, sections[incoming])
       el.dataset.chapter = chapters[readingIndex].id
       el.dataset.transition = incoming === -1 ? 'hold' : 'watercolor'
       meter.style.transform = `scaleX(${p})`
@@ -232,7 +185,7 @@ export function CinematicStage() {
     const updateSizing = () => {
       const headerHeight = mast.current!.offsetHeight
       if (el.dataset.mastHeight !== String(headerHeight)) {
-        revealBounds = null
+        diagonal = 0
         el.dataset.mastHeight = String(headerHeight)
       }
       document.documentElement.style.setProperty('--mast-actual', `${headerHeight}px`)
@@ -251,19 +204,16 @@ export function CinematicStage() {
       el.classList.remove('is-cinematic', 'story-fallback', 'compact-story')
       track.classList.remove('story-is-active')
       veil.hidden = true
-      veil.dataset.quietTransition = 'false'
-      veil.style.removeProperty('--quiet-edge-opacity')
-      veil.style.removeProperty('--edge-mask-size')
-      veil.style.removeProperty('--quiet-focus-x')
-      for (const key of ['--glimpse-opacity', '--glimpse-lift']) veil.style.removeProperty(key)
+      delete field.dataset.incoming
+      field.style.removeProperty('--watercolor-aperture-size')
+      field.style.removeProperty('--pigment')
+      veil.style.removeProperty('--glimpse-opacity')
       sections.forEach(section => {
         section.inert = false
         section.removeAttribute('aria-hidden')
         section.classList.remove('current', 'revealing', 'departing')
         section.style.removeProperty('z-index')
-        section.style.removeProperty('--watercolor-aperture-size')
-        section.style.removeProperty('--quiet-paper-tint')
-        for (const key of ['--scene-arrive','--scene-depth','--scene-leave','--reveal-progress','--incoming-art-opacity','--title-opacity','--text-opacity','--paint-depart-opacity']) section.style.removeProperty(key)
+        for (const key of ['--scene-arrive','--scene-depth','--scene-leave','--reveal-progress','--title-opacity','--text-opacity']) section.style.removeProperty(key)
       })
       current = -1
       previousPair = ''
@@ -312,13 +262,20 @@ export function CinematicStage() {
     }
 
     const schedule = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(fit) }
-    const resize = new ResizeObserver(schedule)
+    const resize = new ResizeObserver(entries => {
+      if (entries.some(entry => entry.target === field)) {
+        diagonal = 0
+        if (controller.current) render(progress)
+      }
+      if (entries.some(entry => entry.target === mast.current)) schedule()
+    })
+    resize.observe(field)
     resize.observe(mast.current!)
     reduced.addEventListener('change', schedule)
     const onResize = () => {
       // Ignore browser-chrome height oscillation; refresh only when layout width changes.
       if (Math.abs(width - window.innerWidth) < 2) return
-      revealBounds = null
+      diagonal = 0
       width = window.innerWidth
       schedule()
       if (ctx) requestAnimationFrame(() => ScrollTrigger.refresh())
@@ -356,9 +313,10 @@ export function CinematicStage() {
   </header>
   <div className="story-runway" ref={runway}><div className="stage" ref={stage}><div className="spreads">
     {chapters.map((ch, i) => <ChapterSpread key={ch.id} chapter={ch} ready={loaded.has(i)} />)}
+    <WatercolorTransition />
   </div><div className="stage-foot" aria-hidden="true">
     <div className="scene-progress"><span>{String(active + 1).padStart(2, '0')} / 06</span><i><b className="progress-fill" /></i>
       <span>{chapters[active].name}</span></div>
     <div className="scroll-cue"><span>{active === 5 ? 'Event details' : 'Scroll to continue'}</span><Arrow /></div>
-  </div><WatercolorTransition /></div></div><InvitationMusic /></>
+  </div></div></div><InvitationMusic /></>
 }

@@ -18,9 +18,7 @@ export function ChapterArt({ chapter, ready }: { chapter: Chapter; ready: boolea
 
 
 
-// Visual-only title glimpse over the ORIGINAL soft watercolor wash.
-// The entire incoming spread is masked by watercolor-mask.png in CSS.
-// No char ring, burned edge, or additional scrolling timeline.
+// Decorative cue inside the painted field. The chapter's real heading stays in the spread.
 export function WatercolorTransition() {
   return <div className="watercolor-veil" aria-hidden="true" data-testid="watercolor-chapter-reveal" hidden>
     <div className="chapter-portal__caption"><span className="chapter-portal__title" /></div>
