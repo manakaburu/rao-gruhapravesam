@@ -5,6 +5,10 @@ const stage = readFileSync(new URL('../src/components/CinematicStage.tsx', impor
 const transition = readFileSync(new URL('../src/components/WatercolorTransition.tsx', import.meta.url), 'utf8')
 const css = readFileSync(new URL('../src/styles/invitation.css', import.meta.url), 'utf8')
 const names = ['entrance','welcome','blessings','ceremonies','feast','closing']
+const runwayMatch = chapterSource.match(/RUNWAY = \{ perStage: ([.\d]+), min: (\d+), max: (\d+), shortStage: (\d+) \}/)
+assert(runwayMatch, 'Viewport-relative RUNWAY constant missing')
+const runway = { perStage:Number(runwayMatch[1]), min:Number(runwayMatch[2]), max:Number(runwayMatch[3]) }
+assert(runway.min>=3000 && runway.max<=6500 && runway.perStage>=5.5 && runway.perStage<=7.5, 'Scroll runway out of balanced range')
 const beats = names.map(name => {
   const match = chapterSource.match(new RegExp(`\\b${name}: \\[([.\\d]+),\\s*([.\\d]+)\\]`))
   assert(match, `Missing story beat ${name}`)
@@ -19,11 +23,13 @@ for (let i=0;i<beats.length;i++) {
   if (i<beats.length-1) {
     const gap=beats[i+1].start-beat.end
     assert(gap>=.11 && gap<=.15,`${beat.name} full-page fade needs a .11–.15 progress window; got ${gap}`)
-    assert(gap*5800>=690 && gap*5800<=830,'Desktop transition should take about 700–900px')
-    assert(gap*4200>=500 && gap*4200<=600,'Mobile transition should take about 500–650px')
+    // V11: runway = 6.4 × stage height, so each wash is ~0.74 of a screen tall.
+    const wash = gap * runway.perStage
+    assert(wash>=.65 && wash<=.85, `${beat.name} wash should take about 0.65–0.85 screens; got ${wash.toFixed(2)}`)
+    if (i>0) assert(beat.end-beat.start>=.06, `${beat.name} needs a real reading hold`)
   }
 }
-assert(stage.includes('scrollDistance = 5800') && stage.includes('? 4200 : 5800'), 'Final balanced scroll runway changed')
+assert(stage.includes('stageHeight * RUNWAY.perStage') && stage.includes("probe.style.height = '100svh'"), 'Runway must follow the stable small-viewport stage height')
 assert(stage.includes('scrub: .55'), 'Responsive scroll scrub latency changed')
 assert(stage.includes('watercolorAt(blend)'), 'Watercolor must sample the shared scroll playhead')
 assert(stage.includes("field.style.setProperty('--watercolor-aperture-size'"), 'Full-field watercolor opening missing')

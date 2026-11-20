@@ -18,7 +18,7 @@ assert(css.includes('@keyframes rao-leaf-fall')&&leaves.includes('FallingLeaves'
 const positions=[...leaves.matchAll(/x: (\d+)/g)].map(m=>Number(m[1]))
 assert(positions.length>=6 && positions.every(x=>x<=10||x>=90),'Leaves must remain at edges')
 assert(main.includes('<FallingLeaves />'), 'Persistent leaves not mounted')
-assert(music.includes('await sound.play()') && music.includes('preload="auto"'), 'Tap/autoplay audio flow missing')
+assert(music.includes('await sound.play()') && music.includes('preload="none"'), 'Tap/autoplay audio flow missing')
 assert(music.includes('achyutam-keshavam-user-upload.mp3'), 'User-selected track source missing')
 const file=new URL('../public/audio/achyutam-keshavam-user-upload.mp3',import.meta.url)
 assert(statSync(file).size>8000000,'Complete uploaded audio missing')

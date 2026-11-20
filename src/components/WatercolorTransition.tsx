@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Chapter } from '../data/chapters'
+import { FloralRule } from './Ornaments'
 
 export function ChapterArt({ chapter, ready }: { chapter: Chapter; ready: boolean }) {
   const [fallback, setFallback] = useState(false)
@@ -16,11 +17,16 @@ export function ChapterArt({ chapter, ready }: { chapter: Chapter; ready: boolea
   </div></div>
 }
 
-
-
-// Decorative cue inside the painted field. The chapter's real heading stays in the spread.
+// Decorative chapter card shown mid-wash. It sits on its own deckle-edged slip
+// of parchment so it reads cleanly over painting and paper alike. The chapter's
+// real, accessible heading stays in the spread itself.
 export function WatercolorTransition() {
   return <div className="watercolor-veil" aria-hidden="true" data-testid="watercolor-chapter-reveal" hidden>
-    <div className="chapter-portal__caption"><span className="chapter-portal__title" /></div>
+    <div className="chapter-portal__caption">
+      <span className="chapter-portal__slip" />
+      <span className="chapter-portal__count" />
+      <span className="chapter-portal__title" />
+      <FloralRule />
+    </div>
   </div>
 }

@@ -1,3 +1,5 @@
+> **V11 UPDATE (2026-11-19):** `V11_RESPONSIVE_AUDIO_NOTES.md` supersedes `FINAL_LOCK_V10.md` for the scroll runway (now viewport-relative), the mid-wash chapter title card, the venue card layout, tablet/landscape layouts and the mobile music cover. Read it before changing those areas.
+
 > **FINAL V10 LOCK (2026-11-19):** `FINAL_LOCK_V10.md` overrides historical release/pacing notes only for the last two watercolor reveals and the 5800px/4200px scroll runway. All artwork, Telugu copy, factual event data, audio, V9 main-scene motion and five-transition structure remain locked. Read that file before previous implementation notes.
 
 > **LATEST SOURCE UPDATE (2026-11-18):** `APPLY_UPDATE.md` is authoritative for the restored six-scene painterly scroll storytelling and the fully framed feast illustration. The existing code already contains these changes. Preserve all four immutable entrance/interior art files. Do not revert to a sealed parchment wash or the cropped former feast artwork. Read `APPLY_UPDATE.md` first.

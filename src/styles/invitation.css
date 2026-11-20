@@ -86,12 +86,6 @@ a:focus-visible,summary:focus-visible,[tabindex]:focus-visible { outline:2px sol
 address { font-style:normal }
 address>* { display:block }
 .address-print strong { font:600 clamp(1.2rem,1.65vw,1.6rem)/1 var(--display); margin-bottom:.4rem }
-@container (max-width:17rem) {
-  .address-print { display:block }
-  .address-print .plate { aspect-ratio:7; margin-bottom:.65rem }
-  .address-print .painting img { object-fit:cover; object-position:top }
-  .address-print address { width:100%; overflow-wrap:anywhere }
-}
 .folio-corner { position:absolute; right:var(--gutter); top:.25rem; width:clamp(5.5rem,10vw,10rem); height:auto; opacity:.60; pointer-events:none; z-index:-1; mask:url('/assets/paper-edge.png') center / 100% 100% no-repeat }
 .spread--feast .folio-corner { left:var(--gutter); right:auto; top:-.75rem }
 .spread--ceremonies,.spread--feast { isolation:isolate }
@@ -735,23 +729,76 @@ address>* { display:block }
   -webkit-mask-image:url('/assets/watercolor-seam-final.png');
   mask-image:url('/assets/watercolor-seam-final.png');
 }
+/* Mid-wash chapter card: a deckle-edged parchment slip carrying the chapter
+   number, its name (last word in madder italic, like every chapter heading)
+   and the printed floral rule. Only opacity/transform animate. */
 .chapter-portal__caption {
+  --drift:var(--glimpse-drift,0);
   position:relative;
-  width:min(86%,34rem);
+  display:grid;
+  justify-items:center;
+  gap:clamp(.35rem,1vh,.6rem);
+  width:max-content;
+  max-width:min(88vw,36rem);
+  padding:clamp(1.5rem,4vh,2.4rem) clamp(2.4rem,6vw,4.4rem) clamp(1.1rem,3vh,1.7rem);
   text-align:center;
   opacity:var(--glimpse-opacity,0);
+  transform:translate3d(0,calc(var(--drift) * -10px),0);
 }
+.chapter-portal__caption::before {
+  /* Soft paper halo so the slip lifts off busy painting without a drop shadow. */
+  content:'';
+  position:absolute;
+  inset:-38% -16%;
+  z-index:-2;
+  background:radial-gradient(closest-side,rgb(245 236 221 / .78) 35%,rgb(245 236 221 / 0) 100%);
+  pointer-events:none;
+}
+.chapter-portal__slip {
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:
+    radial-gradient(ellipse at 50% 45%,#fbf4e6 0%,#f8efdf 55%,#f2e6d1 100%),
+    var(--paper);
+  box-shadow:inset 0 0 0 1px #b9955833;
+  -webkit-mask:url('/assets/paper-edge.png') center / 100% 100% no-repeat;
+  mask:url('/assets/paper-edge.png') center / 100% 100% no-repeat;
+  transform:scale(calc(.94 + .06 * var(--glimpse-opacity,0)));
+}
+.chapter-portal__slip::after {
+  /* Hairline brass frame just inside the torn edge, like a printed card. */
+  content:'';
+  position:absolute;
+  inset:clamp(.55rem,1.2vw,.8rem);
+  border:1px solid #b9955866;
+  border-radius:2px;
+}
+.chapter-portal__count {
+  display:flex;
+  align-items:center;
+  gap:.7rem;
+  font:500 .68rem/1 var(--utility);
+  letter-spacing:.22em;
+  color:#8e7044;
+}
+.chapter-portal__count::before,
+.chapter-portal__count::after { content:''; width:1.6rem; height:1px; background:currentColor; opacity:.55 }
 .chapter-portal__title {
   display:block;
-  font:600 clamp(1.5rem,3vw,2.8rem)/1.06 var(--display);
-  letter-spacing:-.025em;
+  font:500 clamp(2rem,3.6vw,3.4rem)/1 var(--display);
+  letter-spacing:-.03em;
   color:var(--ink);
   text-wrap:balance;
-  paint-order:stroke fill;
-  -webkit-text-stroke:1.5px rgb(255 248 232 / .88);
+  white-space:nowrap;
 }
+.chapter-portal__title em { color:var(--madder); font-style:italic; }
+.watercolor-veil .chapter-portal__caption .floral-rule { margin:.1rem 0 0; color:#a3824b; justify-content:center; }
+.watercolor-veil .chapter-portal__caption .floral-rule svg { width:2.5rem; height:1.15rem; }
 @media(max-width:860px) {
-  .chapter-portal__title { font-size:clamp(1.35rem,5.8vw,1.85rem); }
+  .chapter-portal__caption { padding:1.35rem 2rem 1rem; gap:.35rem; }
+  .chapter-portal__title { font-size:clamp(1.7rem,8vw,2.3rem); white-space:normal; }
+  .chapter-portal__count { font-size:.62rem; }
 }
 /* Fade text at its own boundary. The ceremony, meal and venue illustrations
    are nested inside information groups and must stay opaque under the mask. */
@@ -773,3 +820,138 @@ address>* { display:block }
 @media(prefers-reduced-motion:reduce) {
   .watercolor-veil { display:none !important; }
 }
+
+/* ===== V11 RESPONSIVE PASS (2026-11-19) =====
+   1. The venue card is a real CSS card laid exactly over the painted card, so
+      the address can never spill outside the frame; it grows if it must.
+   2. Tablet portrait gets tablet-sized art and type instead of phone caps.
+   3. The footer chapter label never wraps beside the music button. */
+.closing-inset .address-print { display:grid; place-items:center; container-type:inline-size; }
+.closing-inset .address-print > .plate { grid-area:1/1; width:100%; max-width:none; aspect-ratio:4/3; align-self:center; }
+.stage.story-fallback .closing-inset .address-print { width:min(100%,59svh,26rem); }
+/* Landscape phones read as a document; give paintings more of the width. */
+@media (orientation:landscape) and (max-height:520px) {
+  .stage.story-fallback .plate { max-width:min(100%,88svh); }
+  .stage.story-fallback .closing-inset .address-print { width:min(100%,88svh,26rem); }
+}
+.closing-inset .address-print address {
+  grid-area:1/1; position:relative; z-index:1; align-self:center;
+  /* Outer border of the painted card: 69.4% wide, 66.1% of a 4:3 plate tall. */
+  width:69.4%; min-height:49.6cqw; margin-top:1cqw;
+  display:flex; flex-direction:column; justify-content:center; align-items:center; gap:.05em;
+  padding:clamp(.6rem,4.2cqw,1.4rem) clamp(.55rem,3.6cqw,1.2rem);
+  font:400 clamp(.72rem,3.2cqw,.98rem)/1.38 var(--utility);
+  overflow-wrap:normal;
+  background:#fcf3e2; border:1.5px solid #8a4b36; border-radius:clamp(10px,3.6cqw,22px);
+}
+.closing-inset .address-print address::before {
+  content:''; position:absolute; inset:4px; border:1px solid #b9955899; border-radius:inherit; pointer-events:none;
+}
+.closing-inset .address-print address strong {
+  font:600 clamp(1.02rem,5.1cqw,1.6rem)/1.05 var(--display); margin-bottom:.3em; text-wrap:balance;
+}
+.scene-progress { min-width:0; }
+.scene-progress span:last-child { min-width:0; overflow:hidden; text-overflow:ellipsis; }
+@media(max-width:700px) {
+  .scene-progress span:last-child { white-space:nowrap; }
+}
+@media(max-width:420px) {
+  /* The arrow alone carries the cue; the chapter name keeps its full width. */
+  .scroll-cue span { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+}
+@media (min-width:600px) and (max-width:860px) and (min-height:700px) {
+  .story-runway.story-is-active .spread,
+  .story-runway.story-is-active .spread--blessings,
+  .story-runway.story-is-active .spread--ceremonies,
+  .story-runway.story-is-active .spread--feast,
+  .story-runway.story-is-active .spread--closing { padding:1rem clamp(1.5rem,6vw,3.5rem); gap:clamp(.45rem,1.3svh,1rem); }
+  .story-runway.story-is-active .heading-block h1,
+  .story-runway.story-is-active .heading-block h2 { font-size:clamp(2.8rem,min(8.4vw,5.4svh),4.4rem); }
+  .story-runway.story-is-active .spread--welcome h2 { font-size:clamp(2.6rem,min(7.8vw,5svh),4rem); }
+  .story-runway.story-is-active .invocation { font-size:.8rem; margin-bottom:.45rem; }
+  .story-runway.story-is-active .floral-rule { margin:.1rem auto .35rem; }
+  .story-runway.story-is-active .verse { font-size:clamp(1.02rem,2.5vw,1.3rem); line-height:1.62; }
+  .story-runway.story-is-active .imprint span:first-child { font-size:1.55rem; }
+  .story-runway.story-is-active .imprint span+span { font-size:.9rem; }
+  .story-runway.story-is-active .source-line { font-size:1.35rem; max-width:32rem; }
+  .story-runway.story-is-active .plate--entrance,
+  .story-runway.story-is-active .plate--welcome,
+  .story-runway.story-is-active .plate--blessings { width:min(86vw,49svh,38rem); }
+  .story-runway.story-is-active .spread--ceremonies .schedule-inset { width:min(100%,36rem); padding:.4rem .2rem; }
+  .story-runway.story-is-active .spread--ceremonies .events li { padding:.6rem 0; }
+  .story-runway.story-is-active .spread--ceremonies .events h3 { font-size:1.85rem; }
+  .story-runway.story-is-active .spread--ceremonies .events time { font-size:.95rem; margin:.25rem 0; }
+  .story-runway.story-is-active .spread--ceremonies .events p { font-size:.86rem; line-height:1.45; }
+  .story-runway.story-is-active .spread--ceremonies .plate--ceremonies { width:clamp(9rem,calc((100svh - 700px) * 1.05),17rem); }
+  .story-runway.story-is-active .spread--feast .plate--feast { width:min(84vw,47svh,36rem); }
+  .story-runway.story-is-active .spread--feast .meal-inset>p { font-size:2.2rem; }
+  .story-runway.story-is-active .spread--feast .meal-inset time { font-size:.95rem; margin-top:.3rem; }
+  .story-runway.story-is-active .spread--closing .address-print { width:min(100%,37svh,27rem); }
+  .story-runway.story-is-active .closing-inset { max-width:36rem; }
+  .story-runway.story-is-active .closing-inset .invitation-actions { font-size:.86rem; }
+  .story-runway.story-is-active .closing-inset :is(.action-row a,.calendars a) { min-height:40px; }
+}
+/* Phones: use the spare stage height for the paintings (still inside one screen). */
+@media (max-width:599px) and (min-height:600px) {
+  .story-runway.story-is-active .plate--entrance,
+  .story-runway.story-is-active .plate--welcome,
+  .story-runway.story-is-active .plate--blessings { width:min(94vw,45svh,26rem); }
+  .story-runway.story-is-active .spread--feast .plate--feast { width:min(90vw,40svh,23rem); }
+  .story-runway.story-is-active .spread--ceremonies .plate--ceremonies { width:clamp(8.3rem,calc((100svh - 500px) * .75),13rem); }
+  .story-runway.story-is-active .spread--closing .address-print { width:min(100%,44svh,21rem); }
+}
+/* ===== "Open invitation" cover — shown only when the browser blocked autoplay.
+   Its button is the user gesture phones require before any sound may play. */
+.music-gate-open, .music-gate-open body { overflow:hidden; }
+.music-gate {
+  position:fixed; inset:0; z-index:40; display:grid; place-items:center;
+  padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left));
+  background:radial-gradient(ellipse at 50% 45%,rgb(249 243 232 / .9) 0%,rgb(245 236 221 / .96) 60%,rgb(236 222 198 / .98) 100%);
+  touch-action:none; overscroll-behavior:contain;
+  animation:rao-gate-in .55s ease-out both;
+}
+.music-gate.is-closing { animation:rao-gate-out .7s ease-in both; pointer-events:none; }
+.music-gate__card {
+  position:relative; display:grid; justify-items:center; text-align:center; gap:.35rem;
+  width:min(100%,27rem); padding:clamp(2rem,6vh,3rem) clamp(1.5rem,6vw,3rem) clamp(1.6rem,5vh,2.4rem);
+  color:var(--ink);
+}
+.music-gate__card::before {
+  content:''; position:absolute; inset:0; z-index:-1;
+  background:radial-gradient(ellipse at 50% 40%,#fdf8ee 0%,#f8efdf 60%,#f1e4cd 100%);
+  -webkit-mask:url('/assets/paper-edge.png') center / 100% 100% no-repeat;
+  mask:url('/assets/paper-edge.png') center / 100% 100% no-repeat;
+}
+.music-gate__card::after {
+  content:''; position:absolute; inset:clamp(.7rem,2vw,1rem); border:1px solid #b9955873; pointer-events:none;
+}
+.music-gate__card img { width:2.75rem; height:2.75rem; margin-bottom:.2rem; }
+.music-gate__family { font:500 .72rem/1.4 var(--utility); letter-spacing:.22em; text-transform:uppercase; color:#8e7044; }
+.music-gate__title { font:500 clamp(2.3rem,9vw,3.3rem)/.98 var(--display); letter-spacing:-.04em; margin-top:.2rem; }
+.music-gate__title em { display:block; color:var(--madder); }
+.music-gate__meta { display:grid; font:500 .86rem/1.5 var(--utility); color:var(--muted); margin-top:.35rem; }
+.music-gate__meta span:first-child { font:600 1.2rem/1.3 var(--display); color:var(--ink); }
+.music-gate .floral-rule { justify-content:center; margin:.55rem 0 .7rem; color:#a3824b; }
+.music-gate__open {
+  display:inline-flex; align-items:center; justify-content:center; gap:.55rem; min-height:48px;
+  padding:.8rem 1.7rem; border:1px solid #7c3229; border-radius:99px; cursor:pointer;
+  background:var(--madder); color:#fff8ec; font:500 .9rem/1 var(--utility); letter-spacing:.06em;
+  box-shadow:0 6px 18px #913f3733; transition:background .2s, transform .2s;
+}
+.music-gate__open span { font-size:1.15rem; line-height:1; }
+.music-gate__open:hover { background:#7f352e; }
+.music-gate__open:active { transform:scale(.98); }
+.music-gate__quiet {
+  min-height:44px; padding:.5rem 1rem; margin-top:.25rem; border:0; background:none; cursor:pointer;
+  font:500 .78rem/1.3 var(--utility); color:var(--muted); text-decoration:underline; text-underline-offset:.25em;
+}
+.music-gate :is(button):focus-visible { outline:2px solid var(--madder); outline-offset:3px; }
+@keyframes rao-gate-in { from { opacity:0 } to { opacity:1 } }
+@keyframes rao-gate-out { from { opacity:1 } to { opacity:0; visibility:hidden } }
+@media (max-height:520px) {
+  .music-gate__card { gap:.15rem; padding-block:1.2rem; }
+  .music-gate__card img { display:none; }
+  .music-gate__title { font-size:2rem; }
+  .music-gate .floral-rule { margin:.2rem 0 .35rem; }
+}
+@media (prefers-reduced-motion:reduce) { .music-gate, .music-gate.is-closing { animation-duration:.01ms; } }

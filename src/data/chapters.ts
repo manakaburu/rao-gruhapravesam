@@ -4,16 +4,20 @@ import { invitation } from './invitation'
 export type ChapterId = 'entrance' | 'welcome' | 'blessings' | 'ceremonies' | 'feast' | 'closing'
 type VerseKey = keyof typeof invitation.verse
 
-// V6: first reveal begins after ~310 desktop pixels; five reversible ~806px
-// full-stage watercolor transitions. Each other chapter holds ~310px to read.
+// V11: the runway is ~6.4 stage-heights long (see CinematicStage), so every
+// chapter costs roughly one screen of scrolling on any device. Each of the five
+// reversible watercolor reveals spans 11.5% of the runway and every chapter
+// then holds still for 7.5% so its text can be read before the next wash.
 export const STORY_BEATS: Record<ChapterId, [number, number]> = {
-  entrance: [0, .05],
-  welcome: [.18, .23],
-  blessings: [.36, .41],
-  ceremonies: [.54, .59],
-  feast: [.72, .77],
-  closing: [.90, 1],
+  entrance: [0, .045],
+  welcome: [.16, .235],
+  blessings: [.35, .425],
+  ceremonies: [.54, .615],
+  feast: [.73, .805],
+  closing: [.92, 1],
 }
+/** Scroll runway length as a multiple of the visible stage height, with limits. */
+export const RUNWAY = { perStage: 6.4, min: 3200, max: 6000, shortStage: 460 } as const
 const beats = STORY_BEATS
 const alt: Record<ChapterId, string> = {
   entrance: 'Painted door of Flat 201 surrounded by peacocks, garlands, brass lamps and a white threshold muggu.',

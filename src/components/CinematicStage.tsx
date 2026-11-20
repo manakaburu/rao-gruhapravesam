@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { MouseEvent } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { chapters } from '../data/chapters'
+import { chapters, RUNWAY } from '../data/chapters'
 import { watercolorAt } from '../data/watercolor'
 import { invitation } from '../data/invitation'
 import { ChapterSpread } from './ChapterSpread'
@@ -74,6 +74,15 @@ export function CinematicStage() {
     const veil = el.querySelector<HTMLDivElement>('.watercolor-veil')!
     const meter = el.querySelector<HTMLElement>('.progress-fill')!
     const portalTitle = veil.querySelector<HTMLElement>('.chapter-portal__title')!
+    const portalCount = veil.querySelector<HTMLElement>('.chapter-portal__count')!
+    // "Welcome Home" -> "Welcome <em>Home</em>", echoing each chapter's own heading.
+    const setPortalTitle = (index: number) => {
+      const words = chapters[index].name.split(' ')
+      const em = document.createElement('em')
+      em.textContent = words.pop()!
+      portalTitle.replaceChildren(words.length ? words.join(' ') + ' ' : '', em)
+      portalCount.textContent = `${String(index + 1).padStart(2, '0')} / ${String(chapters.length).padStart(2, '0')}`
+    }
     const known = new Set([0])
     const prepare = (n: number) => {
       if (n < 0 || n >= sections.length || known.has(n)) return
@@ -119,7 +128,7 @@ export function CinematicStage() {
         prepare(outgoing)
         if (incoming !== -1) {
           prepare(incoming)
-          portalTitle.textContent = chapters[incoming].name
+          setPortalTitle(incoming)
           field.dataset.incoming = chapters[incoming].id
         }
         sections.forEach((section, i) => {
@@ -163,6 +172,8 @@ export function CinematicStage() {
         field.style.setProperty('--watercolor-aperture-size', (1 + 3.45 * diagonal * wash.aperture).toFixed(1) + 'px')
         field.style.setProperty('--pigment', wash.pigment.toFixed(4))
         veil.style.setProperty('--glimpse-opacity', wash.cue.toFixed(4))
+        // -1 -> 1 across the title window: the caption rises gently through it.
+        veil.style.setProperty('--glimpse-drift', (clamp((blend - .35) / .40) * 2 - 1).toFixed(4))
       } else {
         delete field.dataset.incoming
       }
@@ -179,8 +190,17 @@ export function CinematicStage() {
     let ctx: gsap.Context | undefined
     let alive = true
     let width = window.innerWidth
-    let scrollDistance = 5800
+    let scrollDistance = 0
+    let shortStage = false
     let frame = 0
+    // 100svh never changes while a mobile toolbar collapses, so the runway and
+    // mode chosen from it stay put mid-scroll. Re-measured only on width change.
+    const probe = document.createElement('div')
+    probe.setAttribute('aria-hidden', 'true')
+    probe.style.cssText = 'position:fixed;top:0;left:0;width:0;visibility:hidden;pointer-events:none'
+    probe.style.height = '100vh'
+    probe.style.height = '100svh'
+    document.body.appendChild(probe)
 
     const updateSizing = () => {
       const headerHeight = mast.current!.offsetHeight
@@ -189,7 +209,11 @@ export function CinematicStage() {
         el.dataset.mastHeight = String(headerHeight)
       }
       document.documentElement.style.setProperty('--mast-actual', `${headerHeight}px`)
-      const nextDistance = window.innerWidth <= 860 ? 4200 : 5800
+      const stageHeight = (probe.offsetHeight || window.innerHeight) - headerHeight
+      // Landscape phones cannot hold a whole chapter on one pinned screen; they
+      // read the same chapters as a normal, gently revealed document instead.
+      shortStage = stageHeight < RUNWAY.shortStage
+      const nextDistance = Math.round(Math.max(RUNWAY.min, Math.min(RUNWAY.max, stageHeight * RUNWAY.perStage)))
       if (scrollDistance !== nextDistance) {
         scrollDistance = nextDistance
         track.style.setProperty('--story-scroll-distance', `${scrollDistance}px`)
@@ -222,7 +246,7 @@ export function CinematicStage() {
     const fit = () => {
       if (!alive) return
       updateSizing()
-      const canAnimate = !reading && !reduced.matches && mask
+      const canAnimate = !reading && !reduced.matches && mask && !shortStage
       if (canAnimate && !ctx) {
         // No min-width / hover / per-chapter height gate. These previously disabled
         // the entire story mode and unexpectedly stacked every chapter.
@@ -297,6 +321,7 @@ export function CinematicStage() {
       reduced.removeEventListener('change', schedule)
       window.removeEventListener('resize', onResize)
       clear()
+      probe.remove()
       document.documentElement.style.removeProperty('--mast-actual')
     }
   }, [reading])
